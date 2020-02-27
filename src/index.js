@@ -13,21 +13,56 @@ import './images/001-ticket.svg';
 import './images/customers.svg';
 import './images/login.svg';
 
-let logInBtn = $('#login-btn');
+const logInBtn = $('#login-btn');
+const main = $('main');
+const userBtns = $('.user-buttons');
 let submitLogin;
-let main = $('main');
+let logInUsername;
+let logInPassword;
+let logOutButton;
 
-
+const assignButton = () => {
+  logOutButton = $('#log-out-btn')
+}
 
 const showLoginModule = () => {
   main.append(userElements.logIn);
   submitLogin = $('#log-in-submit');
+  logInUsername = $('#username');
+  logInPassword = $('#password');
   submitLogin.on('click', logIn)
 };
 
+const logInAgent = () => {
+  userBtns.html(agentElements.navButtons)
+}
+
+const logInClient = () => {
+  userBtns.html(userElements.navButtons)
+}
+
+const logInValidater = () => {
+  let clientUsername = logInUsername.val().toLowerCase().includes('traveler');
+  let agentUsername = logInUsername.val().toLowerCase().includes('agency');
+  let correctPassword = logInPassword.val().toLowerCase() === 'travel2020'
+  if (clientUsername && correctPassword) {
+    logInClient()
+  } else if (agentUsername && correctPassword) {
+    logInAgent()
+  } else {
+    return true
+  }
+  assignButton()
+}
+
 const logIn = () => {
-  let modle = $('#login-modle')
-  modle.remove()
+
+  if (logInValidater()) {
+    alert('Invalid Information')
+  } else {
+    let modle = $('#login-modle')
+    modle.remove()
+  }
 };
 
 
