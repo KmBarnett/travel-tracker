@@ -176,6 +176,7 @@ article {
   overflow-x: scroll;
 
   & h1 {
+    align-self: flex-start;
     width: 40%;
     font-family: $fancy-font;
     font-size: 2rem;
@@ -196,6 +197,7 @@ article {
       border-radius: 45px;
       padding: 1%;
       margin: 1%;
+      border: groove 5px $blue;
 
       & h3 {
         width: fit-content;
@@ -209,6 +211,7 @@ article {
         @include widthNheight(90%, 70%);
         border-radius: 30px;
         margin: 1%, 0;
+        border: groove 5px $yellow;
       }
     }
   }
