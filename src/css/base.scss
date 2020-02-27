@@ -47,11 +47,11 @@ nav {
   & header {
     @include flexNdirection(column);
     width: 45%;
-    font-family: $fancy-font;
     padding-left: 1%;
     border: solid black 1px;
     border-radius: 45px;
     background-color: $yellow;
+    font-family: $fancy-font;
 
     & p {
       margin-left: 5%;
@@ -85,9 +85,9 @@ nav {
     @include widthNheight(30%, 100%);
     align-items: center;
     justify-content: space-between;
+    outline: none;
     color: $yellow;
     font-size: 1rem;
-    outline: none;
     transition: 1s ease;
 
     &:hover,
@@ -107,16 +107,18 @@ nav {
 }
 
 .login-module {
-  @include widthNheight(30%, 40%);
+  @include widthNheight(30%, 60%);
   @include flexNdirection(row);
-  justify-content: center;
-  position: absolute;
-  top: 30%;
-  left: 35%;
   z-index: 1000;
-  background-color: $white;
-  border-radius: 50px;
+  position: absolute;
+  top: 20%;
+  left: 35%;
+  justify-content: center;
+  height: 200px;
   border: groove 10px $purple;
+  border-radius: 50px;
+  background-color: $white;
+  box-shadow: 5px 5px 5px $black;
 
   & form {
     @include flexNdirection(column);
@@ -129,19 +131,19 @@ nav {
     }
 
     & input {
+      padding: 1%;
       border: solid $black 1px;
       font-size: 1.25rem;
-      padding: 1%;
     }
 
     & button {
-      outline: none;
-      background-color: $blue;
-      color: $yellow;
       width: 30%;
       padding: 1%;
       border: solid 1px $black;
       border-radius: 50px;
+      outline: none;
+      background-color: $blue;
+      color: $yellow;
       font-size: 1rem;
 
       &:hover {
@@ -154,16 +156,16 @@ nav {
 
 main {
   @include flexNdirection(column);
-  height: 85vh;
   align-items: center;
+  height: 85vh;
   background-color: $yellow;
 }
 
 article {
   width: 70%;
+  padding: 2%;
   border: groove 10px $blue;
   border-radius: 50px;
-  padding: 2%;
   font-family: $article-font;
   font-size: 1.25rem;
 }
@@ -175,12 +177,27 @@ article {
   padding: 1%;
   overflow-x: scroll;
 
+  & div {
+    @include flexNdirection(row);
+    width: 100%;
+    justify-content: space-between;
+  }
+
   & h1 {
-    align-self: flex-start;
     width: 40%;
-    font-family: $fancy-font;
     font-size: 2rem;
+    margin-bottom: 1%;
+  }
+
+  & .welcome {
+    border-bottom: groove 10px $purple;
+    font-family: $main-font;
+    text-align: right;
+  }
+
+  & .banner {
     border-bottom: groove 10px $blue;
+    font-family: $fancy-font;
   }
 
   & .destinations-cards-section {
@@ -193,11 +210,11 @@ article {
       @include flexNdirection(column);
       align-items: center;
       justify-content: space-evenly;
-      background-color: $white;
-      border-radius: 45px;
-      padding: 1%;
       margin: 1%;
+      padding: 1%;
       border: groove 5px $blue;
+      border-radius: 45px;
+      background-color: $white;
 
       & h3 {
         width: fit-content;
@@ -209,9 +226,9 @@ article {
 
       & img {
         @include widthNheight(90%, 70%);
-        border-radius: 30px;
         margin: 1%, 0;
         border: groove 5px $yellow;
+        border-radius: 30px;
       }
     }
   }
