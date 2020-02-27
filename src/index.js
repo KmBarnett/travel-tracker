@@ -13,16 +13,49 @@ import './images/001-ticket.svg';
 import './images/customers.svg';
 import './images/login.svg';
 
-const logInBtn = $('#login-btn');
+let logInBtn = $('#login-btn');
 const main = $('main');
 const userBtns = $('.user-buttons');
+let destinationsCardSection = $('#destinations-cards')
+let destinations;
+let trips;
+let user;
 let submitLogin;
 let logInUsername;
 let logInPassword;
 let logOutButton;
 
+
+
+const createDestinationCards = () => {
+  console.log(destinations);
+  destinations.forEach(destination => {
+    let card = `
+    <section id='${destination.id}' class="destinations-card">
+      <h3 class="dest-name">${destination.destination}</h3>
+      <img src="${destination.image}" alt="">
+      <div class="trip-info">
+      <p class="dest-lodging-cost">Lodging: $<span class="money">${destination.estimatedLodgingCostPerDay}</span> per Person</p>
+      <p class="dest-flight-cost">Flight: $<span class="money">${destination.estimatedFlightCostPerPerson}</span> per Person</p>
+      </div>
+    </section>`
+    destinationsCardSection.append(card)
+  });
+}
+
+const logOut = () => {
+  userBtns.html(userElements.logInBtn)
+  logInBtn = $('#login-btn');
+  logInBtn.on('click', showLoginModule)
+}
+
+const assignListeners = () => {
+  logOutButton.on('click', logOut)
+}
+
 const assignButton = () => {
   logOutButton = $('#log-out-btn')
+  assignListeners()
 }
 
 const showLoginModule = () => {
@@ -65,5 +98,11 @@ const logIn = () => {
   }
 };
 
+
+fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations')
+  .then(response => response.json())
+  .then(data => destinations = data.destinations)
+  .then(createDestinationCards)
+  .catch(err => console.log(err.message))
 
 logInBtn.on('click', showLoginModule)

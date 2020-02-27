@@ -28,6 +28,10 @@ const userElements = {
       <button id="log-in-submit" type="button" name="Log In">Log In</button>
     </form>
   </section>`,
+  logInBtn: `<button id="login-btn" class="login" type="button" name="Plan a Trip">
+    <img src="./images/login.svg" alt="">
+    <p>Log In</p>
+  </button>`,
 }
 
 module.exports = userElements;
