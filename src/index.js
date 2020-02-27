@@ -3,11 +3,32 @@
 
 // An example of how you import jQuery into a JS file if you use jQuery in that file
 import $ from 'jquery';
-
-// An example of how you tell webpack to use a CSS (SCSS) file
+import userElements from './user-page.js';
+import agentElements from './agent-page.js';
 import './css/base.scss';
+import './images/sam-icon.svg';
+import './images/005-flyer.svg';
+import './images/003-world.svg';
+import './images/001-ticket.svg';
+import './images/customers.svg';
+import './images/login.svg';
 
-// An example of how you tell webpack to use an image (also need to link to it in the index.html)
-import './images/turing-logo.png'
+let logInBtn = $('#login-btn');
+let submitLogin;
+let main = $('main');
 
-console.log('This is the JavaScript entry file - your code begins here.');
+
+
+const showLoginModule = () => {
+  main.append(userElements.logIn);
+  submitLogin = $('#log-in-submit');
+  submitLogin.on('click', logIn)
+};
+
+const logIn = () => {
+  let modle = $('#login-modle')
+  modle.remove()
+};
+
+
+logInBtn.on('click', showLoginModule)
