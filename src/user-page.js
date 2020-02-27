@@ -11,7 +11,7 @@ const userElements = {
       <img src="./images/003-world.svg" alt="">
       Destinations
     </button>
-    <button id="log-out-btn" type="button" name="Log Out">
+    <button id="log-out-btn" class="login" type="button" name="Log Out">
       <img src="./images/login.svg" alt="">
       Log Out
     </button>`,

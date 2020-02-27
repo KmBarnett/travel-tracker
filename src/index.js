@@ -6,6 +6,7 @@ import $ from 'jquery';
 import User from './User.js'
 import userElements from './user-page.js';
 import agentElements from './agent-page.js';
+import dataController from './Data-Controller.js'
 import './css/base.scss';
 import './images/sam-icon.svg';
 import './images/005-flyer.svg';
@@ -20,11 +21,10 @@ const nav = $('nav');
 const page = $('html')
 const userBtns = $('.user-buttons');
 const body = $('body');
-const destinationsCardSection = $('#destinations-cards');
+const contentSection = $('#destinations-cards');
 const welcomeBanner = $('.welcome')
 let logInBtn = $('#login-btn');
 let destinations;
-let trips;
 let user = new User();
 let submitLogin;
 let logInUsername;
@@ -47,7 +47,7 @@ const createDestinationCards = () => {
       <p class="dest-flight-cost">Flight: $<span class="money">${destination.estimatedFlightCostPerPerson}</span> per Person</p>
       </div>
     </section>`
-    destinationsCardSection.append(card)
+    contentSection.append(card)
   });
 }
 
@@ -102,6 +102,7 @@ const logInClient = (username) => {
     .then(data => user = user.showClient(data))
     .then(customizePage)
     .catch(error => console.log(error.message))
+
 }
 
 const logInValidater = () => {
@@ -138,7 +139,7 @@ const hideBanner = () => {
   if (page.scrollTop() < lastScroll) {
     nav.css('opacity', '1')
   } else if (page.scrollTop() > 110) {
-    nav.css('opacity', '.1')
+    nav.css('opacity', '0')
   }
 }
 
@@ -148,7 +149,6 @@ fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/des
   .then(data => destinations = data.destinations)
   .then(createDestinationCards)
   .catch(err => console.log(err.message))
-
 
 welcomeBanner.text(`Welcome, ${user.name}`)
 main.on('click', checkLoggedIn)

@@ -175,9 +175,9 @@ article {
   @include flexNdirection(column);
   align-items: center;
   padding: 1%;
-  margin-top: 9%; 
+  margin-top: 9%;
 
-  & div {
+  & .banner-section {
     @include flexNdirection(row);
     width: 100%;
     justify-content: space-between;

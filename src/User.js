@@ -19,6 +19,7 @@ class User {
     return new Agent(data)
   }
 
+
   userLogIn(id) {
 
     return window.fetch(`https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/${id}`)
