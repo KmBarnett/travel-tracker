@@ -40,6 +40,7 @@ nav {
   @include flexNdirection(row);
   @include widthNheight(100%, 15vh);
   align-items: center;
+  position: fixed;
   justify-content: space-between;
   padding: 1%;
   background: linear-gradient(90deg,$blue 40%, $purple 70%);
@@ -157,7 +158,6 @@ nav {
 main {
   @include flexNdirection(column);
   align-items: center;
-  height: 85vh;
   background-color: $yellow;
 }
 
@@ -175,7 +175,7 @@ article {
   @include flexNdirection(column);
   align-items: center;
   padding: 1%;
-  overflow-x: scroll;
+  margin-top: 9%; 
 
   & div {
     @include flexNdirection(row);

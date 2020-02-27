@@ -16,6 +16,8 @@ import './images/login.svg';
 import './images/android-chrome-512x512.png'
 
 const main = $('main');
+const nav = $('nav');
+const page = $('html')
 const userBtns = $('.user-buttons');
 const body = $('body');
 const destinationsCardSection = $('#destinations-cards');
@@ -28,6 +30,7 @@ let submitLogin;
 let logInUsername;
 let logInPassword;
 let logOutButton;
+let lastScroll;
 
 
 
@@ -127,6 +130,18 @@ const logIn = () => {
   }
 };
 
+const hideBanner = () => {
+  setTimeout(function() {
+    lastScroll = page.scrollTop();
+  }, 5)
+
+  if (page.scrollTop() < lastScroll) {
+    nav.css('opacity', '1')
+  } else if (page.scrollTop() > 110) {
+    nav.css('opacity', '.1')
+  }
+}
+
 
 fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations')
   .then(response => response.json())
@@ -135,7 +150,7 @@ fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/des
   .catch(err => console.log(err.message))
 
 
-
 welcomeBanner.text(`Welcome, ${user.name}`)
 main.on('click', checkLoggedIn)
 logInBtn.on('click', showLoginModule)
+window.addEventListener('scroll', hideBanner)
