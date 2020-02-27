@@ -2,8 +2,8 @@ import Client from './Client.js'
 
 class Agent extends Client {
   constructor() {
-    super('Mr. Jackson')
+    super({name: 'Mr. Jackson'})
   }
 }
 
-module.exports = Agent;
+export default  Agent;

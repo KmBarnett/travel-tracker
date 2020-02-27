@@ -8,18 +8,25 @@ class User {
   }
 
   adminLogIn() {
-    fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers')
+    return window.fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers')
       .then(response => response.json())
-      .then(data => this.showCustomers(data))
+      .then(data => data)
       .catch(error => console.log(error.message))
-    return new Agent()
+
+  }
+
+  showAgent(data) {
+    return new Agent(data)
   }
 
   userLogIn(id) {
-    fetch(`https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/${id}`)
+
+    return window.fetch(`https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/${id}`)
       .then(response => response.json())
-      .then(data => this.showClient(data))
+      .then(data => data)
       .catch(error => console.log(error.message))
+
+
   }
 
   showClient(data) {
@@ -27,4 +34,4 @@ class User {
   }
 }
 
-module.exports = User;
+export default  User;

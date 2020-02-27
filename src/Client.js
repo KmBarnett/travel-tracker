@@ -1,7 +1,15 @@
-class Client {
-  constructor() {
+import User from './User.js'
 
+
+class Client {
+  constructor(user) {
+    this.name = user.name;
   }
+
+  logOut() {
+    return new User()
+  }
+
 }
 
-module.exports = Client;
+export default Client;
