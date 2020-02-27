@@ -10,8 +10,12 @@ const userElements = {
     <button type="button" name="Destinations">
       <img src="./images/003-world.svg" alt="">
       Destinations
+    </button>
+    <button id="log-out-btn" type="button" name="Log Out">
+      <img src="./images/login.svg" alt="">
+      Log Out
     </button>`,
-  logIn:`<section id="login-modle" class="login-module">
+  logIn: `<section id="login-modle" class="login-module">
     <form class="login-form">
       <div>
         <label for="username">Username:</label>
@@ -19,11 +23,11 @@ const userElements = {
       </div>
       <div>
         <label for="username">Password:</label>
-        <input id="password" type="text" name="Password" placeholder="Password">
+        <input id="password" type="password" name="Password" placeholder="Password">
       </div>
       <button id="log-in-submit" type="button" name="Log In">Log In</button>
     </form>
-  </section>`
+  </section>`,
 }
 
 module.exports = userElements;
