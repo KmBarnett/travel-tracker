@@ -43,7 +43,7 @@ const createDestinationCards = () => {
       <img src="${destination.image}" alt="">
       </button>
       <div class="trip-info">
-      <p class="dest-lodging-cost">Lodging: $<span class="money">${destination.estimatedLodgingCostPerDay}</span> per Person</p>
+      <p class="dest-lodging-cost">Lodging: $<span class="money">${destination.estimatedLodgingCostPerDay}</span> per Day</p>
       <p class="dest-flight-cost">Flight: $<span class="money">${destination.estimatedFlightCostPerPerson}</span> per Person</p>
       </div>
     </section>`
@@ -53,6 +53,7 @@ const createDestinationCards = () => {
 
 const customizePage = () => {
   welcomeBanner.text(`Welcome, ${user.name}`)
+  welcomeBanner.append(`<p>You have Spent: $${user.showTotalSpent(destinations)}</p>`)
 }
 
 const checkLoggedIn = () => {
@@ -89,7 +90,7 @@ const showLoginModule = () => {
 
 const logInAgent = () => {
   userBtns.html(agentElements.navButtons)
-  user.adminLogIn()
+  dataController.adminLogIn()
     .then(data => user = user.showAgent(data))
     .then(customizePage)
     .catch(error => console.log(error.message))
@@ -98,8 +99,8 @@ const logInAgent = () => {
 const logInClient = (username) => {
   let id = username.split('traveler');
   userBtns.html(userElements.navButtons);
-  user.userLogIn(id[1])
-    .then(data => user = user.showClient(data))
+  dataController.userLogIn(id[1])
+    .then(data => user = user.showClient(data, dataController.grabUserTrips(id[1])))
     .then(customizePage)
     .catch(error => console.log(error.message))
 
@@ -150,6 +151,8 @@ fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/des
   .then(createDestinationCards)
   .catch(err => console.log(err.message))
 
+
+dataController.grabAll()
 welcomeBanner.text(`Welcome, ${user.name}`)
 main.on('click', checkLoggedIn)
 logInBtn.on('click', showLoginModule)
