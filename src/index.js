@@ -3,6 +3,7 @@
 
 // An example of how you import jQuery into a JS file if you use jQuery in that file
 import $ from 'jquery';
+import moment from 'moment'
 import User from './User.js'
 import userElements from './user-page.js';
 import agentElements from './agent-page.js';
@@ -17,6 +18,7 @@ import './images/login.svg';
 import './images/android-chrome-512x512.png'
 
 const main = $('main');
+const dateSection = $('#date')
 const userBtns = $('.user-buttons');
 const body = $('body');
 const contentSection = $('#destinations-cards');
@@ -44,7 +46,7 @@ const showTrips = () => {
       ${userElements.createTripsCard(destination, cost, trip)}
     </section>
     `
-    contentSection.append(ticket)
+    contentSection.prepend(ticket)
   });
 
 }
@@ -70,16 +72,18 @@ const createDestinationCards = () => {
 
 const customizePage = () => {
   welcomeBanner.text(`Welcome, ${user.name}`)
-  if (checkLoggedIn()) {
-    welcomeBanner.append(`<p>Total Spent: $${user.showTotalSpent(dataController.destinations)}</p>`)
+  if (body.hasClass('client-js')) {
+    let cost = user.showTotalSpent(dataController.destinations)
+    welcomeBanner.append(userElements.totalCost(cost))
+  } else if (body.hasClass('agent-js')) {
+    let earned;
+    welcomeBanner.append(agentElements.totalEarned(earned))
   }
 }
 
 const checkLoggedIn = () => {
   if (body.hasClass('guest-js')) {
     showLoginModule()
-  } else {
-    return true
   }
 }
 
@@ -161,7 +165,7 @@ const logIn = () => {
 };
 
 
-
+dateSection.text(`${moment().format("YYYY/MMM/DD")}`)
 dataController.getDestenations()
   .then(createDestinationCards)
 dataController.grabTrips()
