@@ -6,15 +6,27 @@ const dataController = {
   destinations: null,
 
 
-  async grabTrips() {
+  grabTrips() {
     fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips')
       .then(response => response.json())
       .then(data => dataController.trips = data.trips)
       .catch(err => console.log(err.message))
   },
 
+  dateToNum(date) {
+    let splitDate = date.split('/')
+    if (splitDate[1].length === 1) {
+      splitDate[1] = `0${splitDate[1]}`
+    }
+    return parseInt(splitDate.join(''))
+  },
+
   grabUserTrips(id) {
     let trips = dataController.trips.filter(trip => trip.userID === id * 1)
+    trips.sort((a, b) => {
+      return (dataController.dateToNum(a.date) - dataController.dateToNum(b.date))
+    })
+    console.log(trips);
     return trips
   },
 
