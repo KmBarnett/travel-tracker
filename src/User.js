@@ -1,5 +1,5 @@
+import Client  from './Client.js'
 import Agent from './Agent.js'
-import Client from './Client.js'
 
 class User {
   constructor() {

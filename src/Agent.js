@@ -1,4 +1,4 @@
-import Client from './Client.js'
+import Client from './Client.js';
 
 class Agent extends Client {
   constructor() {
@@ -6,4 +6,4 @@ class Agent extends Client {
   }
 }
 
-export default  Agent;
+export default Agent;

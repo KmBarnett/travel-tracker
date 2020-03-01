@@ -1,5 +1,3 @@
-import User from './User.js'
-
 
 class Client {
   constructor(user, trips) {
@@ -18,8 +16,8 @@ class Client {
   showTotalSpent(destinations) {
     let totalSpent = 0
     this.trips.forEach(trip => {
-      let myDestinations = destinations.find(destination => destination.id === trip.destinationID)
-      totalSpent += this.calulateTripCost(myDestinations, trip)
+      let myDestination = destinations.find(destination => destination.id === trip.destinationID)
+      totalSpent += this.calulateTripCost(myDestination, trip)
     });
 
     return totalSpent
@@ -27,7 +25,7 @@ class Client {
 
 
   logOut() {
-    return new User()
+    location.reload();
   }
 
 }
