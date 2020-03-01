@@ -10,14 +10,16 @@ class Client {
   calulateTripCost(place, trip) {
     let lodgingCost = (trip.duration * trip.travelers) * place.estimatedLodgingCostPerDay;
     let flightsCost = trip.travelers * place.estimatedFlightCostPerPerson;
-      return lodgingCost + flightsCost
+      return parseFloat(((lodgingCost + flightsCost) * 1.1).toFixed(2))
   }
 
   showTotalSpent(destinations) {
     let totalSpent = 0
     this.trips.forEach(trip => {
       let myDestination = destinations.find(destination => destination.id === trip.destinationID)
-      totalSpent += this.calulateTripCost(myDestination, trip)
+      if (trip.status === 'approved') {
+        totalSpent += this.calulateTripCost(myDestination, trip)
+      }
     });
 
     return totalSpent
