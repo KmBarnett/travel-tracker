@@ -51,6 +51,10 @@ const userElements = {
   </g>
   </svg>`,
 
+  totalCost: (amount) => {
+    return `<p>Total Spent: $${amount}</p>`
+  },
+
   tripsDestination: (name) => {
     return `
       <div>

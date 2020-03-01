@@ -15,6 +15,9 @@ const agentElements = {
     <img src="./images/login.svg" alt="">
     Log Out
   </button>`,
+  totalEarned: (earned) => {
+    return `<p>Total Earned: $${earned}</p>`
+  },
 }
 
 module.exports = agentElements;
