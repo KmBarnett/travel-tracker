@@ -39,13 +39,11 @@ const showTrips = () => {
   contentSection.empty()
   pageBanner.text('My Trips')
   user.trips.forEach(trip => {
+    let date = `${moment().format("YYYY/MM/DD")}`;
     let destination = dataController.findDestination(trip.destinationID);
     let cost = user.calulateTripCost(destination, trip);
-    let ticket = `
-    <section id='${trip.id}' class="trip-card">
-      ${userElements.createTripsCard(destination, cost, trip)}
-    </section>
-    `
+    let ticket = userElements.createTripsCard(destination, cost, trip, date);
+
     contentSection.prepend(ticket)
   });
 
@@ -55,17 +53,7 @@ const createDestinationCards = () => {
   pageBanner.text('Destinations')
   contentSection.empty()
   dataController.destinations.forEach(destination => {
-    let card = `
-    <section id='${destination.id}' class="destinations-card">
-      <h3 class="dest-name">${destination.destination}</h3>
-      <button>
-      <img src="${destination.image}" alt="${destination.destination}">
-      </button>
-      <div class="trip-info">
-      <p class="dest-lodging-cost">Lodging: $<span class="money">${destination.estimatedLodgingCostPerDay}</span> per Day</p>
-      <p class="dest-flight-cost">Flight: $<span class="money">${destination.estimatedFlightCostPerPerson}</span> per Person</p>
-      </div>
-    </section>`
+    let card = userElements.createDestinationCards(destination)
     contentSection.append(card)
   });
 }
