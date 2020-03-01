@@ -17,30 +17,47 @@ import './images/login.svg';
 import './images/android-chrome-512x512.png'
 
 const main = $('main');
-const nav = $('nav');
-const page = $('html')
 const userBtns = $('.user-buttons');
 const body = $('body');
 const contentSection = $('#destinations-cards');
 const welcomeBanner = $('.welcome')
+const pageBanner = $('.banner')
 let logInBtn = $('#login-btn');
-let destinations;
 let user = new User();
+
+let tripsBtn;
 let submitLogin;
 let logInUsername;
 let logInPassword;
 let logOutButton;
-let lastScroll;
+let destinationsBtn;
 
 
+const showTrips = () => {
+  contentSection.empty()
+  pageBanner.text('My Trips')
+  user.trips.forEach(trip => {
+    let destination = dataController.findDestination(trip.destinationID);
+    let cost = user.calulateTripCost(destination, trip);
+    let ticket = `
+    <section id='${trip.id}' class="trip-card">
+      ${userElements.createTripsCard(destination, cost, trip)}
+    </section>
+    `
+    contentSection.append(ticket)
+  });
+
+}
 
 const createDestinationCards = () => {
-  destinations.forEach(destination => {
+  pageBanner.text('Destinations')
+  contentSection.empty()
+  dataController.destinations.forEach(destination => {
     let card = `
     <section id='${destination.id}' class="destinations-card">
       <h3 class="dest-name">${destination.destination}</h3>
       <button>
-      <img src="${destination.image}" alt="">
+      <img src="${destination.image}" alt="${destination.destination}">
       </button>
       <div class="trip-info">
       <p class="dest-lodging-cost">Lodging: $<span class="money">${destination.estimatedLodgingCostPerDay}</span> per Day</p>
@@ -53,12 +70,16 @@ const createDestinationCards = () => {
 
 const customizePage = () => {
   welcomeBanner.text(`Welcome, ${user.name}`)
-  welcomeBanner.append(`<p>You have Spent: $${user.showTotalSpent(destinations)}</p>`)
+  if (checkLoggedIn()) {
+    welcomeBanner.append(`<p>Total Spent: $${user.showTotalSpent(dataController.destinations)}</p>`)
+  }
 }
 
 const checkLoggedIn = () => {
   if (body.hasClass('guest-js')) {
     showLoginModule()
+  } else {
+    return true
   }
 }
 
@@ -68,15 +89,20 @@ const logOut = () => {
   logInBtn = $('#login-btn');
   logInBtn.on('click', showLoginModule)
   user = user.logOut()
+  createDestinationCards()
   customizePage()
 }
 
 const assignListeners = () => {
   logOutButton.on('click', logOut)
+  tripsBtn.on('click', showTrips)
+  destinationsBtn.on('click', createDestinationCards)
 }
 
 const assignButton = () => {
   logOutButton = $('#log-out-btn')
+  tripsBtn = $('#my-trips')
+  destinationsBtn = $('#destinations')
   assignListeners()
 }
 
@@ -112,9 +138,11 @@ const logInValidater = () => {
   let correctPassword = logInPassword.val().toLowerCase() === 'travel2020'
   if (clientUsername && correctPassword) {
     body.removeClass('guest-js')
+    body.addClass('client-js')
     logInClient(logInUsername.val())
   } else if (agentUsername && correctPassword) {
     body.removeClass('guest-js')
+    body.addClass('agent-js')
     logInAgent()
   } else {
     return true
@@ -132,28 +160,11 @@ const logIn = () => {
   }
 };
 
-const hideBanner = () => {
-  setTimeout(function() {
-    lastScroll = page.scrollTop();
-  }, 5)
-
-  if (page.scrollTop() < lastScroll) {
-    nav.css('opacity', '1')
-  } else if (page.scrollTop() > 110) {
-    nav.css('opacity', '0')
-  }
-}
 
 
-fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations')
-  .then(response => response.json())
-  .then(data => destinations = data.destinations)
+dataController.getDestenations()
   .then(createDestinationCards)
-  .catch(err => console.log(err.message))
-
-
-dataController.grabAll()
+dataController.grabTrips()
 welcomeBanner.text(`Welcome, ${user.name}`)
 main.on('click', checkLoggedIn)
 logInBtn.on('click', showLoginModule)
-window.addEventListener('scroll', hideBanner)
