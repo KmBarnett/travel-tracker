@@ -1,5 +1,5 @@
 /* This is an example of using Sass, otherwise plain CSS works too*/
-$yellow: #EFA802;
+$grey: #D4D8DB;
 $white: #FCFCFC;
 $blue: #8075FF;
 $black: #000000;
@@ -7,6 +7,10 @@ $purple: #6320EE;
 $main-font: 'Nunito';
 $article-font: 'Istok Web';
 $fancy-font: 'Fanwood Text';
+$template:
+  "y b b b"
+  "y c c c"
+  "a d d d";
 
 @mixin flexNdirection($direction) {
   display: flex;
@@ -15,7 +19,15 @@ $fancy-font: 'Fanwood Text';
 
 @mixin widthNheight($width, $height) {
   width: $width;
-  max-height: $height;
+  height: $height;
+}
+
+@mixin positionAbsolute($top, $right, $bottom, $left) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
 }
 
 
@@ -38,9 +50,8 @@ body {
 
 nav {
   @include flexNdirection(row);
-  @include widthNheight(100%, 15vh);
+  @include widthNheight(100%, 130px);
   align-items: center;
-  position: fixed;
   justify-content: space-between;
   padding: 1%;
   background: linear-gradient(90deg,$blue 40%, $purple 70%);
@@ -51,7 +62,7 @@ nav {
     padding-left: 1%;
     border: solid black 1px;
     border-radius: 45px;
-    background-color: $yellow;
+    background-color: $grey;
     font-family: $fancy-font;
 
     & p {
@@ -74,7 +85,7 @@ nav {
 
 .user-buttons {
   @include flexNdirection(row);
-  @include widthNheight(30%, 80%);
+  @include widthNheight(40%, 80%);
   justify-content: space-evenly;
 
   & img {
@@ -87,7 +98,7 @@ nav {
     align-items: center;
     justify-content: space-between;
     outline: none;
-    color: $yellow;
+    color: $grey;
     font-size: 1rem;
     transition: 1s ease;
 
@@ -144,11 +155,11 @@ nav {
       border-radius: 50px;
       outline: none;
       background-color: $blue;
-      color: $yellow;
+      color: $grey;
       font-size: 1rem;
 
       &:hover {
-        background-color: $yellow;
+        background-color: $grey;
         color: $blue;
       }
     }
@@ -158,16 +169,21 @@ nav {
 main {
   @include flexNdirection(column);
   align-items: center;
-  background-color: $yellow;
+  background-color: $grey;
 }
 
-article {
-  width: 70%;
-  padding: 2%;
-  border: groove 10px $blue;
-  border-radius: 50px;
-  font-family: $article-font;
-  font-size: 1.25rem;
+footer {
+  background-color: $purple;
+
+  article {
+    width: 50%;
+    padding: 2% 1%;
+    color: $white;
+    border-radius: 50px;
+    font-family: $article-font;
+    font-size: 1rem;
+    font-style: italic;
+  }
 }
 
 .destinations-area {
@@ -175,18 +191,18 @@ article {
   @include flexNdirection(column);
   align-items: center;
   padding: 1%;
-  margin-top: 9%;
 
   & .banner-section {
     @include flexNdirection(row);
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
   }
 
   & h1 {
-    width: 40%;
+    width: 39%;
     font-size: 2rem;
-    margin-bottom: 1%;
+    margin: 1% 8%;
+
   }
 
   & .welcome {
@@ -203,6 +219,8 @@ article {
   & .destinations-cards-section {
     @include flexNdirection(row);
     flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
     justify-content: center;
 
     & .destinations-card {
@@ -215,6 +233,7 @@ article {
       border: groove 5px $blue;
       border-radius: 45px;
       background-color: $white;
+      box-shadow: 3px 3px 5px $black;
 
       & h3 {
         width: fit-content;
@@ -227,10 +246,92 @@ article {
       & img {
         @include widthNheight(90%, 70%);
         margin: 1%, 0;
-        border: groove 5px $yellow;
         border-radius: 30px;
       }
     }
   }
 
+
+}
+
+.trip-card {
+  @include widthNheight(90%, 450px);
+  position: relative;
+
+  & .trip-info {
+    @include positionAbsolute(1%, auto, auto, 3%);
+    @include widthNheight(100%, 100%);
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "a b";
+    z-index: 1;
+
+    & .trip-header {
+      grid-area: a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      & div {
+        transform: rotate(-90deg);
+        text-align: center;
+      }
+
+      & .ticket-name {
+        font-size: 1.5rem;
+      }
+    }
+
+    & .trip-details {
+      display: grid;
+      grid-template-columns: 2fr;
+      grid-template-rows: .1fr .8fr .1fr;
+      grid-template-areas: "ba" "bb" "bc";
+      grid-area: b;
+      grid-row-gap: 9%;
+
+      & .trip-grid-area {
+        @include flexNdirection(row);
+        justify-content: space-between;
+        align-items: center;
+        width: 80%;
+      }
+
+      & .trip-top {
+        @extend .trip-grid-area;
+        grid-area: ba;
+        margin-top: 3%;
+      }
+
+      & .trip-middle {
+        @extend .trip-grid-area;
+        grid-area: bb;
+        align-items: baseline;
+      }
+
+      & .trip-bottom {
+        @extend .trip-grid-area;
+        grid-area: bc;
+      }
+    }
+
+  }
+
+  & .trip-background {
+    @include widthNheight(100%, 100%);
+    filter: drop-shadow(2px 2px 7px rgba(0,0,0,0.5));
+    position: absolute;
+    z-index: 0;
+  }
+
+  & .ticket-img {
+    width: 50%;
+    height: 100%;
+    border-radius: 45px;
+  }
+
+  & .green {
+    color: green;
+  }
 }
