@@ -63,7 +63,7 @@ describe('Client', function() {
       travelers: 5,
       date: "2020/10/04",
       duration: 18,
-      status: "pending",
+      status: "approved",
       suggestedActivities: [ ]
     },
     {
@@ -90,11 +90,11 @@ describe('Client', function() {
   });
 
   it('should be able to calculate the cost of a trip', function(){
-    expect(user.calulateTripCost(destinationsData[0], tripsData[0])).to.equal(960);
+    expect(user.calulateTripCost(destinationsData[0], tripsData[0])).to.equal(1056);
   });
 
   it('should be able to calculate the total spent ', function(){
-    expect(user.showTotalSpent(destinationsData)).to.equal(26500);
+    expect(user.showTotalSpent(destinationsData)).to.equal(15246);
   });
 
 
