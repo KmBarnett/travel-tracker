@@ -3,16 +3,14 @@
 
 const dataController = {
   trips: null,
+  destinations: null,
 
-  async grabAll() {
-    dataController.trips = await dataController.grabTrips()
-  },
 
   async grabTrips() {
-    let response = await
-    fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
-    let tripsInfo = await response.json();
-    return tripsInfo.trips
+    fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips')
+      .then(response => response.json())
+      .then(data => dataController.trips = data.trips)
+      .catch(err => console.log(err.message))
   },
 
   grabUserTrips(id) {
@@ -33,7 +31,19 @@ const dataController = {
       .then(data => data)
       .catch(error => console.log(error.message))
 
-  }
+  },
+
+  getDestenations() {
+    return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations')
+      .then(response => response.json())
+      .then(data => dataController.destinations = data.destinations)
+      .catch(err => console.log(err.message))
+  },
+
+  findDestination(destinationID) {
+    return dataController.destinations
+      .find(destination => destinationID === destination.id)
+  },
 
 
 
