@@ -3,9 +3,11 @@
 
 // An example of how you import jQuery into a JS file if you use jQuery in that file
 import $ from 'jquery';
+import moment from 'moment'
 import User from './User.js'
 import userElements from './user-page.js';
 import agentElements from './agent-page.js';
+import dataController from './Data-Controller.js'
 import './css/base.scss';
 import './images/sam-icon.svg';
 import './images/005-flyer.svg';
@@ -16,43 +18,88 @@ import './images/login.svg';
 import './images/android-chrome-512x512.png'
 
 const main = $('main');
-const nav = $('nav');
-const page = $('html')
+const dateSection = $('#date')
 const userBtns = $('.user-buttons');
 const body = $('body');
-const destinationsCardSection = $('#destinations-cards');
+const contentSection = $('#destinations-cards');
 const welcomeBanner = $('.welcome')
+const pageBanner = $('.banner')
+let today = moment().format("YYYY/MM/DD");
 let logInBtn = $('#login-btn');
-let destinations;
-let trips;
 let user = new User();
+let customersBtn;
+let tripsBtn;
 let submitLogin;
 let logInUsername;
 let logInPassword;
 let logOutButton;
-let lastScroll;
+let destinationsBtn;
 
 
+const numberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+const showAll = () => {
+  showUserDataForAgent(user.listTripsPendingFirst())
+  $('.show-all').text('Show Pending').on('click', showUserDataForAgentHelper)
+}
+
+const showUserDataForAgentHelper = () => {
+  showUserDataForAgent(user.listPendingTrips(today))
+}
+
+const showUserDataForAgent = (trips) => {
+  contentSection.empty()
+  pageBanner.text('Pending Trips')
+  customizePage()
+  let table = agentElements.tripsTable();
+  contentSection.prepend(table)
+  let tableSection = $('#table')
+  let cells = agentElements.userListItems(trips, user.users, dataController.destinations)
+  cells.forEach(cell => {
+    tableSection.append(cell)
+  });
+  $('.show-all').on('click', showAll)
+}
+
+const showUserTrips = () => {
+  contentSection.empty()
+  pageBanner.text('My Trips');
+  user.trips.forEach(trip => {
+    let date = dataController.compareDates(trip.date);
+    let destination = dataController.findDestination(parseInt(trip.destinationID));
+    let cost = user.calulateTripCost(destination, trip);
+    let costWithCommas = numberWithCommas(cost)
+    let ticket = userElements.createTripsCard(destination, costWithCommas, trip, date);
+
+    contentSection.prepend(ticket)
+  });
+
+}
 
 const createDestinationCards = () => {
-  destinations.forEach(destination => {
-    let card = `
-    <section id='${destination.id}' class="destinations-card">
-      <h3 class="dest-name">${destination.destination}</h3>
-      <button>
-      <img src="${destination.image}" alt="">
-      </button>
-      <div class="trip-info">
-      <p class="dest-lodging-cost">Lodging: $<span class="money">${destination.estimatedLodgingCostPerDay}</span> per Person</p>
-      <p class="dest-flight-cost">Flight: $<span class="money">${destination.estimatedFlightCostPerPerson}</span> per Person</p>
-      </div>
-    </section>`
-    destinationsCardSection.append(card)
+  pageBanner.text('Destinations')
+  customizePage()
+  contentSection.empty()
+  dataController.destinations.forEach(destination => {
+    let card = userElements.createDestinationCards(destination)
+    contentSection.append(card)
   });
 }
 
 const customizePage = () => {
   welcomeBanner.text(`Welcome, ${user.name}`)
+  if (body.hasClass('client-js')) {
+    let cost = user.showTotalSpent(dataController.destinations)
+    let costWithCommas = numberWithCommas(cost)
+    welcomeBanner.append(userElements.totalCost(costWithCommas))
+  } else if (body.hasClass('agent-js')) {
+    let earned = user.showTotalSpent(dataController.destinations)
+    let earnedWithCommas = numberWithCommas(earned)
+    pageBanner.append(agentElements.onTrips(user.showTravelCount(today)))
+    welcomeBanner.append(agentElements.totalEarned(earnedWithCommas))
+  }
 }
 
 const checkLoggedIn = () => {
@@ -63,19 +110,31 @@ const checkLoggedIn = () => {
 
 const logOut = () => {
   body.addClass('guest-js')
+  body.removeClass('client-js')
+  body.removeClass('agent-js')
   userBtns.html(userElements.logInBtn)
   logInBtn = $('#login-btn');
   logInBtn.on('click', showLoginModule)
   user = user.logOut()
+  createDestinationCards()
   customizePage()
 }
 
 const assignListeners = () => {
   logOutButton.on('click', logOut)
+  destinationsBtn.on('click', createDestinationCards)
+  if (body.hasClass('client-js')) {
+    tripsBtn.on('click', showUserTrips)
+  } else if (body.hasClass('agent-js')) {
+    customersBtn.on('click', showUserDataForAgentHelper)
+  }
 }
 
 const assignButton = () => {
   logOutButton = $('#log-out-btn')
+  tripsBtn = $('#my-trips')
+  destinationsBtn = $('#destinations')
+  customersBtn = $('#my-customers');
   assignListeners()
 }
 
@@ -88,20 +147,25 @@ const showLoginModule = () => {
 };
 
 const logInAgent = () => {
+  body.addClass('agent-js')
   userBtns.html(agentElements.navButtons)
-  user.adminLogIn()
-    .then(data => user = user.showAgent(data))
+  dataController.adminLogIn()
+    .then(data => {
+      user = user.showAgent(data, dataController.grabAdminTrips())
+    })
     .then(customizePage)
     .catch(error => console.log(error.message))
 }
 
 const logInClient = (username) => {
+  body.addClass('client-js')
   let id = username.split('traveler');
   userBtns.html(userElements.navButtons);
-  user.userLogIn(id[1])
-    .then(data => user = user.showClient(data))
+  dataController.userLogIn(id[1])
+    .then(data => user = user.showClient(data, dataController.grabUserTrips(id[1])))
     .then(customizePage)
     .catch(error => console.log(error.message))
+
 }
 
 const logInValidater = () => {
@@ -130,27 +194,11 @@ const logIn = () => {
   }
 };
 
-const hideBanner = () => {
-  setTimeout(function() {
-    lastScroll = page.scrollTop();
-  }, 5)
 
-  if (page.scrollTop() < lastScroll) {
-    nav.css('opacity', '1')
-  } else if (page.scrollTop() > 110) {
-    nav.css('opacity', '.1')
-  }
-}
-
-
-fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations')
-  .then(response => response.json())
-  .then(data => destinations = data.destinations)
+dateSection.text(`${today}`)
+dataController.getDestenations()
   .then(createDestinationCards)
-  .catch(err => console.log(err.message))
-
-
+dataController.grabTrips()
 welcomeBanner.text(`Welcome, ${user.name}`)
 main.on('click', checkLoggedIn)
 logInBtn.on('click', showLoginModule)
-window.addEventListener('scroll', hideBanner)

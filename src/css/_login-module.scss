@@ -1,0 +1,47 @@
+.login-module {
+  @include widthNheight(30%, 60%);
+  @include flexNdirection(row);
+  z-index: 1000;
+  position: absolute;
+  top: 20%;
+  left: 35%;
+  justify-content: center;
+  height: 200px;
+  border: groove 10px $purple;
+  border-radius: 50px;
+  background-color: $white;
+  box-shadow: 5px 5px 5px $black;
+
+  & form {
+    @include flexNdirection(column);
+    @include widthNheight(100%, 100%);
+    align-items: center;
+    justify-content: space-evenly;
+
+    & div {
+      @include flexNdirection(column);
+    }
+
+    & input {
+      padding: 1%;
+      border: solid $black 1px;
+      font-size: 1.25rem;
+    }
+
+    & button {
+      width: 30%;
+      padding: 1%;
+      border: solid 1px $black;
+      border-radius: 50px;
+      outline: none;
+      background-color: $blue;
+      color: $grey;
+      font-size: 1rem;
+
+      &:hover {
+        background-color: $grey;
+        color: $blue;
+      }
+    }
+  }
+}

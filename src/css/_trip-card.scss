@@ -1,0 +1,82 @@
+.trip-card {
+  @include widthNheight(90%, 450px);
+  position: relative;
+
+  & .trip-info {
+    @include positionAbsolute(1%, auto, auto, 9%);
+    @include widthNheight(100%, 100%);
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "a b";
+    z-index: 1;
+
+    & .trip-header {
+      grid-area: a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      & div {
+        transform: rotate(-90deg);
+        text-align: center;
+      }
+
+      & .ticket-name {
+        font-size: 1.5rem;
+      }
+    }
+
+    & .trip-details {
+      display: grid;
+      grid-template-columns: .8fr;
+      grid-template-rows: .1fr .8fr .1fr;
+      grid-template-areas: "ba" "bb" "bc";
+      grid-area: b;
+      grid-row-gap: 9%;
+
+      & .trip-grid-area {
+        @include flexNdirection(row);
+        justify-content: space-between;
+        align-items: center;
+        width: 80%;
+      }
+
+      & .trip-top {
+        @extend .trip-grid-area;
+        grid-area: ba;
+        margin-top: 3%;
+      }
+
+      & .trip-middle {
+        @extend .trip-grid-area;
+        grid-area: bb;
+        align-items: baseline;
+      }
+
+      & .trip-bottom {
+        @extend .trip-grid-area;
+        grid-area: bc;
+      }
+    }
+
+  }
+
+  & .trip-background {
+    @include widthNheight(100%, 100%);
+    filter: drop-shadow(2px 2px 7px rgba(0,0,0,0.5));
+    position: absolute;
+    z-index: 0;
+  }
+
+  & .ticket-img {
+    width: 50%;
+    height: 100%;
+    border-radius: 45px;
+  }
+
+  & .green {
+    color: $green;
+  }
+
+}

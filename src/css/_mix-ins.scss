@@ -1,0 +1,17 @@
+@mixin flexNdirection($direction) {
+  display: flex;
+  flex-direction: $direction;
+}
+
+@mixin widthNheight($width, $height) {
+  width: $width;
+  height: $height;
+}
+
+@mixin positionAbsolute($top, $right, $bottom, $left) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
