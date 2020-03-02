@@ -1,10 +1,11 @@
 /* This is an example of using Sass, otherwise plain CSS works too*/
 @import '_variables.scss';
-@import'_mix-ins.scss';
-@import'_user-buttons.scss';
-@import'_login-module.scss';
-@import'_destination-area.scss';
-@import'_trip-card.scss';
+@import '_mix-ins.scss';
+@import '_user-buttons.scss';
+@import '_login-module.scss';
+@import '_destination-area.scss';
+@import '_trip-card.scss';
+@import '_agent-table.scss';
 
 
 
@@ -37,7 +38,7 @@ nav {
 
   & header {
     @include flexNdirection(column);
-    width: 55%;
+    width: 45%;
     padding-left: 1%;
     border: solid black 1px;
     border-radius: 45px;
@@ -48,6 +49,7 @@ nav {
 
   & .date {
     font-family: $main-font;
+    font-size: 1.5rem;
   }
 
   & section {
