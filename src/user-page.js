@@ -89,9 +89,8 @@ const userElements = {
     return `<h2 class="ticket-travelers">Travelers: ${trip.travelers}</h2>`
   },
 
-  createTripsCard: (destination, cost, trip, date) => {
-    let condition = (trip.status === 'approved' && trip.date < date)
-    let done = (condition) ? '#228B22' : '#FCFCFC';
+  createTripsCard: (destination, cost, trip, status) => {
+    let done = (status) ? '#228B22' : '#FCFCFC';
     let info = `
     <section id='${trip.id}' class="trip-card ${done}">
       ${userElements.tripsImage(done)}
