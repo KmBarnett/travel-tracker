@@ -79,7 +79,7 @@ describe('Agent', function() {
       suggestedActivities: [ ]
     }, ];
 
-    userData = [{
+    userData = {travelers:[{
       id: 1,
       name: "Ham Leadbeater",
       travelerType: "relaxer"
@@ -93,7 +93,7 @@ describe('Agent', function() {
       id: 3,
       name: "Sibby Dawidowitsch",
       travelerType: "shopper"
-    }, ]
+    }, ]}
 
     user = new Agent(userData, tripsData)
   });
@@ -104,7 +104,7 @@ describe('Agent', function() {
   });
 
   it('Should be able to hold user Data', function() {
-    expect(user.users).to.deep.equal(userData);
+    expect(user.users).to.deep.equal(userData.travelers);
   });
 
   it('Should have a name of MR. Jackson', function() {
@@ -112,7 +112,11 @@ describe('Agent', function() {
   });
 
   it('Should be able to list pending trips', function() {
-    expect(user.listPendingTrips()).to.deep.equal([tripsData[1]]);
+    expect(user.listPendingTrips(today)).to.deep.equal([tripsData[1]]);
+  });
+
+  it('Should be able to list trips pending first', function() {
+    expect(user.listTripsPendingFirst()).to.deep.equal([tripsData[1], tripsData[0], tripsData[2]]);
   });
 
   it('Should be show Total earned', function() {
