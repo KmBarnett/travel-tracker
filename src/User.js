@@ -6,8 +6,8 @@ class User {
     this.name = 'Guest'
   }
 
-  showAgent(data) {
-    return new Agent(data)
+  showAgent(data, trips) {
+    return new Agent(data, trips)
   }
 
   showClient(data, trips) {
