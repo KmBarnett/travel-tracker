@@ -24,9 +24,10 @@ const body = $('body');
 const contentSection = $('#destinations-cards');
 const welcomeBanner = $('.welcome')
 const pageBanner = $('.banner')
+let today = moment().format("YYYY/MM/DD");
 let logInBtn = $('#login-btn');
 let user = new User();
-
+let customersBtn;
 let tripsBtn;
 let submitLogin;
 let logInUsername;
@@ -35,14 +36,42 @@ let logOutButton;
 let destinationsBtn;
 
 
-const showTrips = () => {
+const numberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+const showAll = () => {
+  showUserDataForAgent(user.listTripsPendingFirst())
+  $('.show-all').text('Show Pending').on('click', showUserDataForAgentHelper)
+}
+
+const showUserDataForAgentHelper = () => {
+  showUserDataForAgent(user.listPendingTrips(today))
+}
+
+const showUserDataForAgent = (trips) => {
   contentSection.empty()
-  pageBanner.text('My Trips')
+  pageBanner.text('Pending Trips')
+  customizePage()
+  let table = agentElements.tripsTable();
+  contentSection.prepend(table)
+  let tableSection = $('#table')
+  let cells = agentElements.userListItems(trips, user.users, dataController.destinations)
+  cells.forEach(cell => {
+    tableSection.append(cell)
+  });
+  $('.show-all').on('click', showAll)
+}
+
+const showUserTrips = () => {
+  contentSection.empty()
+  pageBanner.text('My Trips');
   user.trips.forEach(trip => {
-    let date = `${moment().format("YYYY/MM/DD")}`;
-    let destination = dataController.findDestination(trip.destinationID);
+    let date = dataController.compareDates(trip.date);
+    let destination = dataController.findDestination(parseInt(trip.destinationID));
     let cost = user.calulateTripCost(destination, trip);
-    let ticket = userElements.createTripsCard(destination, cost, trip, date);
+    let costWithCommas = numberWithCommas(cost)
+    let ticket = userElements.createTripsCard(destination, costWithCommas, trip, date);
 
     contentSection.prepend(ticket)
   });
@@ -51,6 +80,7 @@ const showTrips = () => {
 
 const createDestinationCards = () => {
   pageBanner.text('Destinations')
+  customizePage()
   contentSection.empty()
   dataController.destinations.forEach(destination => {
     let card = userElements.createDestinationCards(destination)
@@ -62,10 +92,13 @@ const customizePage = () => {
   welcomeBanner.text(`Welcome, ${user.name}`)
   if (body.hasClass('client-js')) {
     let cost = user.showTotalSpent(dataController.destinations)
-    welcomeBanner.append(userElements.totalCost(cost))
+    let costWithCommas = numberWithCommas(cost)
+    welcomeBanner.append(userElements.totalCost(costWithCommas))
   } else if (body.hasClass('agent-js')) {
-    let earned;
-    welcomeBanner.append(agentElements.totalEarned(earned))
+    let earned = user.showTotalSpent(dataController.destinations)
+    let earnedWithCommas = numberWithCommas(earned)
+    pageBanner.append(agentElements.onTrips(user.showTravelCount(today)))
+    welcomeBanner.append(agentElements.totalEarned(earnedWithCommas))
   }
 }
 
@@ -77,6 +110,8 @@ const checkLoggedIn = () => {
 
 const logOut = () => {
   body.addClass('guest-js')
+  body.removeClass('client-js')
+  body.removeClass('agent-js')
   userBtns.html(userElements.logInBtn)
   logInBtn = $('#login-btn');
   logInBtn.on('click', showLoginModule)
@@ -87,14 +122,19 @@ const logOut = () => {
 
 const assignListeners = () => {
   logOutButton.on('click', logOut)
-  tripsBtn.on('click', showTrips)
   destinationsBtn.on('click', createDestinationCards)
+  if (body.hasClass('client-js')) {
+    tripsBtn.on('click', showUserTrips)
+  } else if (body.hasClass('agent-js')) {
+    customersBtn.on('click', showUserDataForAgentHelper)
+  }
 }
 
 const assignButton = () => {
   logOutButton = $('#log-out-btn')
   tripsBtn = $('#my-trips')
   destinationsBtn = $('#destinations')
+  customersBtn = $('#my-customers');
   assignListeners()
 }
 
@@ -107,14 +147,18 @@ const showLoginModule = () => {
 };
 
 const logInAgent = () => {
+  body.addClass('agent-js')
   userBtns.html(agentElements.navButtons)
   dataController.adminLogIn()
-    .then(data => user = user.showAgent(data))
+    .then(data => {
+      user = user.showAgent(data, dataController.grabAdminTrips())
+    })
     .then(customizePage)
     .catch(error => console.log(error.message))
 }
 
 const logInClient = (username) => {
+  body.addClass('client-js')
   let id = username.split('traveler');
   userBtns.html(userElements.navButtons);
   dataController.userLogIn(id[1])
@@ -130,11 +174,9 @@ const logInValidater = () => {
   let correctPassword = logInPassword.val().toLowerCase() === 'travel2020'
   if (clientUsername && correctPassword) {
     body.removeClass('guest-js')
-    body.addClass('client-js')
     logInClient(logInUsername.val())
   } else if (agentUsername && correctPassword) {
     body.removeClass('guest-js')
-    body.addClass('agent-js')
     logInAgent()
   } else {
     return true
@@ -153,7 +195,7 @@ const logIn = () => {
 };
 
 
-dateSection.text(`${moment().format("YYYY/MMM/DD")}`)
+dateSection.text(`${today}`)
 dataController.getDestenations()
   .then(createDestinationCards)
 dataController.grabTrips()
