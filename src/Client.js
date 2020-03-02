@@ -10,7 +10,7 @@ class Client {
   calulateTripCost(place, trip) {
     let lodgingCost = (trip.duration * trip.travelers) * place.estimatedLodgingCostPerDay;
     let flightsCost = trip.travelers * place.estimatedFlightCostPerPerson;
-      return parseFloat(((lodgingCost + flightsCost) * 1.1).toFixed(2))
+      return Math.trunc(((lodgingCost + flightsCost) * 1.1))
   }
 
   showTotalSpent(destinations) {
