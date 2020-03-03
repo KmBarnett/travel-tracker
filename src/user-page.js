@@ -82,7 +82,7 @@ const userElements = {
   },
 
   tripsDate: (trip) => {
-    return `<h2 class="ticket-date">Days: ${trip.date}</h2>`
+    return `<h2 class="ticket-date">Depart On: ${trip.date}</h2>`
   },
 
   tripsTravelers: (trip) => {

@@ -2,12 +2,21 @@
 // Do not delete or rename this file ********
 
 // An example of how you import jQuery into a JS file if you use jQuery in that file
+
+// packages
 import $ from 'jquery';
 import moment from 'moment'
+
+// classes
+import Request from './Request.js'
 import User from './User.js'
+
+// Data Storage objects
 import userElements from './user-page.js';
 import agentElements from './agent-page.js';
 import dataController from './Data-Controller.js'
+
+// images
 import './css/base.scss';
 import './images/sam-icon.svg';
 import './images/005-flyer.svg';
@@ -27,18 +36,116 @@ const pageBanner = $('.banner')
 let today = moment().format("YYYY/MM/DD");
 let logInBtn = $('#login-btn');
 let user = new User();
+let request = null;
+
+// Non constant DOM elements
 let customersBtn;
+let requestBtn;
 let tripsBtn;
 let submitLogin;
 let logInUsername;
 let logInPassword;
 let logOutButton;
 let destinationsBtn;
+let tripModleDataSelect;
+let requestLeaveDatePicker;
+let requestReturnDatePicker;
+let requestDestination;
+let requestTravlers;
+let requestSubmit;
+let requestForm;
 
+// style alteration
 
 const numberWithCommas = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+// style alteration
+
+// Request Submission
+
+const submitRequestHelper = () => {
+  let customerInput = requestDestination.val();
+  let destination = dataController.findDestination(customerInput, 'destination');
+  let date = requestLeaveDatePicker.val();
+  let formatedDate = dataController.formatDate(date)
+  return {
+    destinationId: destination.id,
+    travelers: parseInt(requestTravlers.val()),
+    date: `${formatedDate}`,
+    duration: calculateDuration(),
+  }
+
+}
+
+const submitRequest = () => {
+  let inputs = submitRequestHelper();
+  request = new Request(dataController.generateId(), user.id, inputs)
+  console.log(request);
+  dataController.postTrip(request)
+  requestForm.remove()
+}
+
+// Request Submission
+
+// Request form validation
+
+
+const calculateDuration = () => {
+  let leaveDate = moment(requestLeaveDatePicker.val());
+  let returnDate = moment(requestReturnDatePicker.val());
+  return returnDate.diff(leaveDate, 'days')
+}
+
+const validateRequestInputs = () => {
+  let customerInput = requestDestination.val();
+  let destinationPicked = dataController.findDestination(customerInput, 'destination');
+  let travelersDeclared = requestTravlers.val().length > 0;
+  return destinationPicked && travelersDeclared
+}
+
+const enableSubmit = () => {
+  let duration = calculateDuration()
+  let inputsFilled = validateRequestInputs()
+  let valid = (duration > 0) && inputsFilled
+  requestSubmit.prop('disabled', !valid)
+}
+
+const enableSecondDateSelect = () => {
+  let startDate = requestLeaveDatePicker.val();
+  requestReturnDatePicker.prop('min', moment(startDate).add(1, 'days').format('YYYY-MM-DD'))
+  requestReturnDatePicker.prop('disabled', false)
+}
+
+const assignRequestListeners = () => {
+  requestLeaveDatePicker.on('change', enableSecondDateSelect);
+  requestForm.on('change', enableSubmit)
+  requestSubmit.on('click', submitRequest)
+}
+
+const assignRequestElements = () => {
+  requestReturnDatePicker = $('#date-return');
+  requestLeaveDatePicker = $('#date-travel');
+  requestDestination = $('#list-input');
+  requestTravlers = $('#travelers-form');
+  requestSubmit = $('#request-submit');
+  requestForm = $('#request-form-frame');
+  assignRequestListeners()
+}
+
+const showRequestModle = () => {
+  let minDate = moment().add(1, 'days').format('YYYY-MM-DD')
+  body.append(userElements.tripRequestModle(minDate));
+  tripModleDataSelect = $('#destination-select')
+  dataController.destinations.forEach(destination => {
+    tripModleDataSelect.append(userElements.destinationOption(destination))
+  });
+  assignRequestElements()
+}
+// Request from validation
+
+// Agent table population
 
 const showAll = () => {
   showUserDataForAgent(user.listTripsPendingFirst())
@@ -63,12 +170,16 @@ const showUserDataForAgent = (trips) => {
   $('.show-all').on('click', showAll)
 }
 
+// Agent table population
+
+// User ticket population
+
 const showUserTrips = () => {
   contentSection.empty()
   pageBanner.text('My Trips');
   user.trips.forEach(trip => {
     let date = dataController.compareDates(trip.date);
-    let destination = dataController.findDestination(parseInt(trip.destinationID));
+    let destination = dataController.findDestination(parseInt(trip.destinationID), 'id');
     let cost = user.calulateTripCost(destination, trip);
     let costWithCommas = numberWithCommas(cost)
     let ticket = userElements.createTripsCard(destination, costWithCommas, trip, date);
@@ -77,6 +188,10 @@ const showUserTrips = () => {
   });
 
 }
+
+// User ticket population
+
+// Destination card Creation
 
 const createDestinationCards = () => {
   pageBanner.text('Destinations')
@@ -87,6 +202,11 @@ const createDestinationCards = () => {
     contentSection.append(card)
   });
 }
+
+
+// Destination card Creation
+
+// page customization
 
 const customizePage = () => {
   welcomeBanner.text(`Welcome, ${user.name}`)
@@ -101,6 +221,11 @@ const customizePage = () => {
     welcomeBanner.append(agentElements.totalEarned(earnedWithCommas))
   }
 }
+
+// page customization
+
+
+// Logging in
 
 const checkLoggedIn = () => {
   if (body.hasClass('guest-js')) {
@@ -120,30 +245,34 @@ const logOut = () => {
   customizePage()
 }
 
-const assignListeners = () => {
+const assignButtonListeners = () => {
   logOutButton.on('click', logOut)
   destinationsBtn.on('click', createDestinationCards)
   if (body.hasClass('client-js')) {
     tripsBtn.on('click', showUserTrips)
+    requestBtn.on('click', showRequestModle)
   } else if (body.hasClass('agent-js')) {
     customersBtn.on('click', showUserDataForAgentHelper)
   }
 }
 
-const assignButton = () => {
+const assignDashButtons = () => {
   logOutButton = $('#log-out-btn')
   tripsBtn = $('#my-trips')
   destinationsBtn = $('#destinations')
   customersBtn = $('#my-customers');
-  assignListeners()
+  requestBtn = $('#plan-trip')
+  assignButtonListeners()
 }
 
 const showLoginModule = () => {
-  body.append(userElements.logIn);
-  submitLogin = $('#log-in-submit');
-  logInUsername = $('#username');
-  logInPassword = $('#password');
-  submitLogin.on('click', logIn)
+  if (!logInUsername) {
+    body.append(userElements.logIn);
+    submitLogin = $('#log-in-submit');
+    logInUsername = $('#username');
+    logInPassword = $('#password');
+    submitLogin.on('click', logIn)
+  }
 };
 
 const logInAgent = () => {
@@ -169,7 +298,7 @@ const logInClient = (username) => {
 }
 
 const logInValidater = () => {
-  let clientUsername = logInUsername.val().toLowerCase().includes('traveler');
+  let clientUsername =  logInUsername.val().toLowerCase().includes('traveler');
   let agentUsername = logInUsername.val().toLowerCase().includes('agency');
   let correctPassword = logInPassword.val().toLowerCase() === 'travel2020'
   if (clientUsername && correctPassword) {
@@ -181,7 +310,7 @@ const logInValidater = () => {
   } else {
     return true
   }
-  assignButton()
+  assignDashButtons()
 }
 
 const logIn = () => {
@@ -194,6 +323,7 @@ const logIn = () => {
   }
 };
 
+// Logging in
 
 dateSection.text(`${today}`)
 dataController.getDestenations()
