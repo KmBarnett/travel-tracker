@@ -93,10 +93,9 @@ const dataController = {
   },
 
   postTripHelper(data) {
-
-
+    let postMeathod = (data.status) ? 'POST' : 'DELETE';
     return {
-      method: 'POST',
+      method: postMeathod,
       headers: {
               'Content-Type': 'application/json'
              },
@@ -106,9 +105,14 @@ const dataController = {
   },
 
 
-  postTrip(data) {
+  postTrip(data, typeOfPost) {
+    let urls = {
+      update: 'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/updateTrip',
+      request: 'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips',
+      delete: 'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips',
+    }
     let options = dataController.postTripHelper(data)
-    return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', options)
+    return fetch(urls[typeOfPost], options)
       .then(response => response.json())
       .catch(err => console.log(err.message))
   },
