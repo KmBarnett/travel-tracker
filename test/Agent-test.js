@@ -137,7 +137,7 @@ describe('Agent', function() {
 
   it('Should be able search a user', function() {
 
-    expect(user.searchUser('Ham Leadbeater')).to.deep.equal({
+    expect(user.searchUser('Ham Leadbeater', destinationsData)).to.deep.equal({
       user: {
         id: 1,
         name: "Ham Leadbeater",
@@ -153,6 +153,7 @@ describe('Agent', function() {
         status: "approved",
         suggestedActivities: [ ]
       },],
+      total: 1056,
     })
   });
 
