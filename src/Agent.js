@@ -38,13 +38,15 @@ class Agent extends Client {
     return totalTrips.length
   }
 
-  searchUser(usersName) {
+  searchUser(usersName, destinations) {
     let currentUser = this.users.find(currentUser => currentUser.name = usersName)
-    let usersTrips = this.trips.filter(trip => trip.userID === currentUser.id);
+    let tripsData = this.listUserTripsById(currentUser.id)
+    tripsData.sort((a, b) => (this.compareDates([a.date, b.date])) ? -1 : 1)
 
     return {
       user: currentUser,
-      trips: usersTrips,
+      trips: tripsData,
+      total: this.showTotalSpentById(destinations, currentUser.id)
     }
   }
 
@@ -56,7 +58,7 @@ class Agent extends Client {
     let totalSpent = 0
     let trips = this.listUserTripsById(id)
     trips.forEach(trip => {
-      let myDestination = this.findDestinationByTrip(destinations)
+      let myDestination = this.findDestinationByTrip(destinations, trip)
       totalSpent += this.showTotalSpentHelper(myDestination, trip)
     });
     return totalSpent
