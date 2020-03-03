@@ -54,6 +54,7 @@ let requestDestination;
 let requestTravlers;
 let requestSubmit;
 let requestForm;
+let requestTotal;
 
 // style alteration
 
@@ -70,21 +71,31 @@ const submitRequestHelper = () => {
   let destination = dataController.findDestination(customerInput, 'destination');
   let date = requestLeaveDatePicker.val();
   let formatedDate = dataController.formatDate(date)
-  return {
+  let userInput = {
     destinationId: destination.id,
     travelers: parseInt(requestTravlers.val()),
     date: `${formatedDate}`,
     duration: calculateDuration(),
   }
 
+  return new Request(dataController.generateId(), user.id, userInput)
 }
 
 const submitRequest = () => {
-  let inputs = submitRequestHelper();
-  request = new Request(dataController.generateId(), user.id, inputs)
-  console.log(request);
+  let request = submitRequestHelper();
   dataController.postTrip(request)
   requestForm.remove()
+  body.removeClass('request')
+  user.updateTrips(request)
+  showUserTrips()
+}
+
+const reviewRequests = (valid) => {
+  if (valid) {
+    let request = submitRequestHelper();
+    let destination = dataController.findDestination(request.destinationID, 'id')
+    requestTotal.text(`Total: $${user.calulateTripCost(destination, request)}`)
+  }
 }
 
 // Request Submission
@@ -110,6 +121,7 @@ const enableSubmit = () => {
   let inputsFilled = validateRequestInputs()
   let valid = (duration > 0) && inputsFilled
   requestSubmit.prop('disabled', !valid)
+  reviewRequests(valid)
 }
 
 const enableSecondDateSelect = () => {
@@ -131,17 +143,21 @@ const assignRequestElements = () => {
   requestTravlers = $('#travelers-form');
   requestSubmit = $('#request-submit');
   requestForm = $('#request-form-frame');
+  requestTotal = $('#request-total')
   assignRequestListeners()
 }
 
 const showRequestModle = () => {
-  let minDate = moment().add(1, 'days').format('YYYY-MM-DD')
-  body.append(userElements.tripRequestModle(minDate));
-  tripModleDataSelect = $('#destination-select')
-  dataController.destinations.forEach(destination => {
-    tripModleDataSelect.append(userElements.destinationOption(destination))
-  });
-  assignRequestElements()
+  if (!body.hasClass('request')) {
+    let minDate = moment().add(1, 'days').format('YYYY-MM-DD')
+    body.append(userElements.tripRequestModle(minDate));
+    tripModleDataSelect = $('#destination-select')
+    dataController.destinations.forEach(destination => {
+      tripModleDataSelect.append(userElements.destinationOption(destination))
+    });
+    assignRequestElements()
+    body.addClass('request')
+  }
 }
 // Request from validation
 
