@@ -1,7 +1,11 @@
 const agentElements = {
   navButtons: `
-  <button type="button" id="my-customers" name="My Customers">
+  <button type="button" id="my-customers" name="pending trips">
     <img src="./images/customers.svg" alt="">
+    my-customers
+  </button>
+  <button type="button" id="pending-trips" name="pending trips">
+    <img src="./images/Pending.svg" alt="">
     Pending Trips
   </button>
   <button id="destinations" type="button" name="Destinations">
@@ -43,10 +47,9 @@ const agentElements = {
 			<td>${user.name}</td>
 			<td>${trip.date}</td>
 			<td>
-      <select>
+      <select id='${trip.id}' class='agent-request-selector'>
         <option value="approved">Approved</option>
         <option value="denied">Denied</option>
-        <option value="canceled">Canceled</option>
         <option ${selected} value="pending">Pending</option>
       <select>
       </td>
@@ -67,6 +70,18 @@ const agentElements = {
   onTrips: (num) => {
     return `<p>Traveling Today: ${num}</p>`
   },
+
+  renderMyCustomersPage: () => {
+    return `
+    <section>
+      <input role="search" type="search" name="search" placeholder="Customer Name">
+      <section id="results">
+      ${agentElements.renderResultsUser()}
+
+      </section>
+    </section>
+    `
+  }
 }
 
 module.exports = agentElements;
