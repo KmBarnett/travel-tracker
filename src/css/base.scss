@@ -7,6 +7,7 @@
 @import '_trip-card.scss';
 @import '_agent-table.scss';
 @import '_request-form.scss';
+@import 'agent-search-page.scss';
 
 
 
@@ -39,10 +40,10 @@ nav {
 
   & header {
     @include flexNdirection(column);
+    @extend .forty-five;
     width: 45%;
     padding-left: 1%;
     border: solid black 1px;
-    border-radius: 45px;
     background-color: $grey;
     font-family: $fancy-font;
 
@@ -98,7 +99,7 @@ footer {
     width: 50%;
     padding: 2% 1%;
     color: $white;
-    border-radius: 50px;
+    @extend .forty-five;
     font-family: $article-font;
     font-size: 1rem;
     font-style: italic;

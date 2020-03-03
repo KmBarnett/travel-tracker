@@ -38,12 +38,12 @@
     & .destinations-card {
       @include widthNheight(21%, 350px);
       @include flexNdirection(column);
+      @extend .forty-five;
       align-items: center;
       justify-content: space-evenly;
       margin: .75%;
       padding: 1%;
       border: groove 5px $blue;
-      border-radius: 45px;
       background-color: $white;
       box-shadow: 3px 3px 5px $black;
 
@@ -57,8 +57,8 @@
 
       & img {
         @include widthNheight(90%, 150px);
+        @extend .forty-five;
         margin: 1%, 0;
-        border-radius: 30px;
       }
 
       & button:hover {

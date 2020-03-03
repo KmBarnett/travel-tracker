@@ -70,9 +70,9 @@
   }
 
   & .ticket-img {
+    @extend .forty-five;
     width: 50%;
     height: 220px;
-    border-radius: 45px;
   }
 
   & .green {

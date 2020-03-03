@@ -28,9 +28,9 @@
 
   & button {
     @include widthNheight(100px, 50px);
+    @extend .forty-five;
     background-color: $purple;
     color: $white;
-    border-radius: 45px;
     margin-top: 2%;
   }
 }

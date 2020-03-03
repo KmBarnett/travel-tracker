@@ -1,0 +1,27 @@
+.seach-page {
+  @include flexNdirection(column);
+  width: 100%;
+  align-items: center;
+
+  & .search-label {
+    font-size: 2rem;
+    width: 60%;
+  }
+
+  & .customer-search {
+    @include widthNheight(80%, auto);
+    @extend .forty-five;
+    font-size: 1.5rem;
+    border: $purple 3px groove;
+    padding: 1%;
+
+
+    &::placeholder {
+      text-align: center;
+    }
+  }
+
+  & .results {
+    width: 100%;
+  }
+}
