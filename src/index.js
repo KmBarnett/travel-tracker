@@ -25,8 +25,8 @@ import './images/001-ticket.svg';
 import './images/customers.svg';
 import './images/login.svg';
 import './images/android-chrome-512x512.png'
+import './images/Pending.svg'
 
-const main = $('main');
 const dateSection = $('#date')
 const userBtns = $('.user-buttons');
 const body = $('body');
@@ -34,19 +34,11 @@ const contentSection = $('#destinations-cards');
 const welcomeBanner = $('.welcome')
 const pageBanner = $('.banner')
 let today = moment().format("YYYY/MM/DD");
-let logInBtn = $('#login-btn');
 let user = new User();
-let request = null;
 
 // Non constant DOM elements
-let customersBtn;
-let requestBtn;
-let tripsBtn;
-let submitLogin;
 let logInUsername;
 let logInPassword;
-let logOutButton;
-let destinationsBtn;
 let tripModleDataSelect;
 let requestLeaveDatePicker;
 let requestReturnDatePicker;
@@ -55,6 +47,11 @@ let requestTravlers;
 let requestSubmit;
 let requestForm;
 let requestTotal;
+
+const closeModle = () => {
+  event.target.closest('section').remove()
+  body.removeClass('request login')
+}
 
 // style alteration
 
@@ -83,11 +80,10 @@ const submitRequestHelper = () => {
 
 const submitRequest = () => {
   let request = submitRequestHelper();
-  dataController.postTrip(request)
-  requestForm.remove()
-  body.removeClass('request')
+  dataController.postTrip(request, 'request')
   user.updateTrips(request)
   showUserTrips()
+  closeModle()
 }
 
 const reviewRequests = (valid) => {
@@ -125,16 +121,12 @@ const enableSubmit = () => {
 }
 
 const enableSecondDateSelect = () => {
+  console.log('');
   let startDate = requestLeaveDatePicker.val();
   requestReturnDatePicker.prop('min', moment(startDate).add(1, 'days').format('YYYY-MM-DD'))
   requestReturnDatePicker.prop('disabled', false)
 }
 
-const assignRequestListeners = () => {
-  requestLeaveDatePicker.on('change', enableSecondDateSelect);
-  requestForm.on('change', enableSubmit)
-  requestSubmit.on('click', submitRequest)
-}
 
 const assignRequestElements = () => {
   requestReturnDatePicker = $('#date-return');
@@ -144,10 +136,9 @@ const assignRequestElements = () => {
   requestSubmit = $('#request-submit');
   requestForm = $('#request-form-frame');
   requestTotal = $('#request-total')
-  assignRequestListeners()
 }
 
-const showRequestModle = () => {
+const showRequestModle = (destination) => {
   if (!body.hasClass('request')) {
     let minDate = moment().add(1, 'days').format('YYYY-MM-DD')
     body.append(userElements.tripRequestModle(minDate));
@@ -156,20 +147,50 @@ const showRequestModle = () => {
       tripModleDataSelect.append(userElements.destinationOption(destination))
     });
     assignRequestElements()
+    if (destination) {
+      requestDestination.val(destination)
+    }
     body.addClass('request')
   }
 }
+
+const openFormWithDest = () => {
+  showRequestModle(event.target.value)
+}
 // Request from validation
+
+// Agent status update
+
+const updateTrips = (packageInfo) => {
+  if (packageInfo.status === 'denied') {
+    dataController.postTrip({id: packageInfo.id}, 'delete')
+  } else if (packageInfo.status === 'approved') {
+    dataController.postTrip(packageInfo, 'update')
+  }
+}
+
+const updateTripStatusHelper = () => {
+  let status = event.target
+  let packageInfo = {
+    id: parseInt(status.id),
+    status: `${status.value}`,
+  }
+  updateTrips(packageInfo)
+}
+
+// Agent status update
 
 // Agent table population
 
 const showAll = () => {
   showUserDataForAgent(user.listTripsPendingFirst())
-  $('.show-all').text('Show Pending').on('click', showUserDataForAgentHelper)
+  $('.show-all').text('Show Pending')
+  $('.show-all').addClass('show-pending')
 }
 
-const showUserDataForAgentHelper = () => {
+const showUserDataForAgentAll = () => {
   showUserDataForAgent(user.listPendingTrips(today))
+  $('.show-all').removeClass('show-pending')
 }
 
 const showUserDataForAgent = (trips) => {
@@ -183,7 +204,6 @@ const showUserDataForAgent = (trips) => {
   cells.forEach(cell => {
     tableSection.append(cell)
   });
-  $('.show-all').on('click', showAll)
 }
 
 // Agent table population
@@ -246,6 +266,8 @@ const customizePage = () => {
 const checkLoggedIn = () => {
   if (body.hasClass('guest-js')) {
     showLoginModule()
+  } else {
+    openFormWithDest()
   }
 }
 
@@ -254,40 +276,17 @@ const logOut = () => {
   body.removeClass('client-js')
   body.removeClass('agent-js')
   userBtns.html(userElements.logInBtn)
-  logInBtn = $('#login-btn');
-  logInBtn.on('click', showLoginModule)
   user = user.logOut()
   createDestinationCards()
   customizePage()
 }
 
-const assignButtonListeners = () => {
-  logOutButton.on('click', logOut)
-  destinationsBtn.on('click', createDestinationCards)
-  if (body.hasClass('client-js')) {
-    tripsBtn.on('click', showUserTrips)
-    requestBtn.on('click', showRequestModle)
-  } else if (body.hasClass('agent-js')) {
-    customersBtn.on('click', showUserDataForAgentHelper)
-  }
-}
-
-const assignDashButtons = () => {
-  logOutButton = $('#log-out-btn')
-  tripsBtn = $('#my-trips')
-  destinationsBtn = $('#destinations')
-  customersBtn = $('#my-customers');
-  requestBtn = $('#plan-trip')
-  assignButtonListeners()
-}
-
 const showLoginModule = () => {
-  if (!logInUsername) {
+  if (!body.hasClass('login')) {
     body.append(userElements.logIn);
-    submitLogin = $('#log-in-submit');
     logInUsername = $('#username');
     logInPassword = $('#password');
-    submitLogin.on('click', logIn)
+    body.addClass('login')
   }
 };
 
@@ -326,7 +325,6 @@ const logInValidater = () => {
   } else {
     return true
   }
-  assignDashButtons()
 }
 
 const logIn = () => {
@@ -334,17 +332,62 @@ const logIn = () => {
   if (logInValidater()) {
     alert('Invalid Information')
   } else {
-    let modle = $('#login-modle')
-    modle.remove()
+    closeModle()
   }
 };
 
 // Logging in
+
+// event handling
+const changeHandler = (e) => {
+
+  if (e.target.id === 'date-travel') {
+    enableSecondDateSelect()
+  }
+
+  if (e.target.classList.contains('agent-request-selector')) {
+    updateTripStatusHelper()
+  }
+
+  if (e.target.closest('section').id === 'request-form-frame') {
+    enableSubmit()
+  }
+}
+
+const clickHandler = (e) => {
+  if (e.target.closest('section').classList.contains('destinations-card')) {
+    checkLoggedIn()
+  } else if (e.target.id === 'login-btn') {
+    showLoginModule()
+  } else if (e.target.id === 'request-submit') {
+    submitRequest()
+  } else if (e.target.id === 'log-out-btn') {
+    logOut()
+  } else if (e.target.classList.contains('show-pending')) {
+    showUserDataForAgentAll()
+  } else if (e.target.classList.contains('show-all')) {
+    showAll()
+  } else if (e.target.classList.contains('close')) {
+    closeModle()
+  } else if (e.target.id === 'my-trips') {
+    showUserTrips()
+  } else if (e.target.id === 'destinations') {
+    createDestinationCards()
+  } else if (e.target.id === 'pending-trips') {
+    showUserDataForAgentAll()
+  } else if (e.target.id === 'plan-trip') {
+    showRequestModle()
+  } else if (e.target.id === 'log-in-submit') {
+    logIn()
+  }
+}
+
+// event handling
 
 dateSection.text(`${today}`)
 dataController.getDestenations()
   .then(createDestinationCards)
 dataController.grabTrips()
 welcomeBanner.text(`Welcome, ${user.name}`)
-main.on('click', checkLoggedIn)
-logInBtn.on('click', showLoginModule)
+body.on('click', clickHandler)
+body.on('change', changeHandler)
