@@ -1,0 +1,36 @@
+.request-form-frame {
+  @extend .login-module;
+  height: 50%;
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & * {
+    font-family: $article-font;
+  }
+
+
+  & .request-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 80%;
+
+    & button {
+      width: 60%;
+      margin-top: 2%
+    }
+
+
+    & input {
+      width: 100%;
+    }
+
+    & h1 {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+}
