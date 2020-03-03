@@ -1,6 +1,6 @@
 .request-form-frame {
   @extend .login-module;
-  height: 50%;
+  height: 60%;
   padding: 2%;
   display: flex;
   flex-direction: column;
@@ -30,6 +30,10 @@
     & h1 {
       margin: 0;
       padding: 0;
+    }
+
+    & .request-total {
+      font-size: 2rem;
     }
   }
 
