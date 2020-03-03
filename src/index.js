@@ -45,7 +45,6 @@ let requestReturnDatePicker;
 let requestDestination;
 let requestTravlers;
 let requestSubmit;
-let requestForm;
 let requestTotal;
 
 const closeModle = () => {
@@ -61,6 +60,34 @@ const numberWithCommas = (number) => {
 
 // style alteration
 
+
+//Agent seach functionality
+const renderSearchAgent = () => {
+  contentSection.empty()
+  contentSection.append(agentElements.renderMyCustomersPage)
+}
+
+const renderResultsHelper = (result, parentNode, destinations) => {
+  result.trips.forEach(trip => {
+    let destination = dataController.findDestination(trip.destinationID, 'id')
+    parentNode.append(agentElements.userListItem(trip, result.user, destination))
+  });
+}
+
+const searchCustomers = (usersName, destinations) => {
+  let resultsSection = $('#results')
+  let userExists = user.users.find(user => user.name.toLowerCase() === usersName.toLowerCase())
+  resultsSection.empty()
+  if (userExists) {
+  let result = user.searchUser(usersName, destinations)
+    resultsSection.append(agentElements.tripsTable())
+    renderResultsHelper(result, $('.agent-table'), destinations)
+  } else {
+    resultsSection.append(agentElements.renderError)
+  }
+}
+
+//Agent seach functionality
 // Request Submission
 
 const submitRequestHelper = () => {
@@ -121,7 +148,6 @@ const enableSubmit = () => {
 }
 
 const enableSecondDateSelect = () => {
-  console.log('');
   let startDate = requestLeaveDatePicker.val();
   requestReturnDatePicker.prop('min', moment(startDate).add(1, 'days').format('YYYY-MM-DD'))
   requestReturnDatePicker.prop('disabled', false)
@@ -134,7 +160,6 @@ const assignRequestElements = () => {
   requestDestination = $('#list-input');
   requestTravlers = $('#travelers-form');
   requestSubmit = $('#request-submit');
-  requestForm = $('#request-form-frame');
   requestTotal = $('#request-total')
 }
 
@@ -339,6 +364,14 @@ const logIn = () => {
 // Logging in
 
 // event handling
+
+const inputHandler = () => {
+  if (event.target.id === 'customer-search' && event.keyCode === 13) {
+    searchCustomers($('#customer-search').val(), dataController.destinations)
+  }
+}
+
+
 const changeHandler = (e) => {
 
   if (e.target.id === 'date-travel') {
@@ -379,6 +412,8 @@ const clickHandler = (e) => {
     showRequestModle()
   } else if (e.target.id === 'log-in-submit') {
     logIn()
+  } else if (e.target.id === 'my-customers') {
+    renderSearchAgent()
   }
 }
 
@@ -391,3 +426,4 @@ dataController.grabTrips()
 welcomeBanner.text(`Welcome, ${user.name}`)
 body.on('click', clickHandler)
 body.on('change', changeHandler)
+body.on('keyup', inputHandler)

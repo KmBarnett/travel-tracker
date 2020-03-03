@@ -67,21 +67,23 @@ const agentElements = {
     })
     return cells
   },
+
   onTrips: (num) => {
     return `<p>Traveling Today: ${num}</p>`
   },
 
-  renderMyCustomersPage: () => {
-    return `
-    <section>
-      <input role="search" type="search" name="search" placeholder="Customer Name">
-      <section id="results">
-      ${agentElements.renderResultsUser()}
-
+  renderMyCustomersPage: `
+    <section class='seach-page'>
+      <label class='search-label' for='customer-search'>Search Records:
+      <input class='customer-search' id='customer-search' role="search" type="search" name="search" placeholder="Customer Name">
+      </label>
+      <section class='results' id="results">
       </section>
     </section>
-    `
-  }
+    `,
+
+  renderError: `<p>User Does Not Exist</p>`
+
 }
 
 module.exports = agentElements;
