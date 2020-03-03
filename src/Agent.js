@@ -38,6 +38,29 @@ class Agent extends Client {
     return totalTrips.length
   }
 
+  searchUser(usersName) {
+    let currentUser = this.users.find(currentUser => currentUser.name = usersName)
+    let usersTrips = this.trips.filter(trip => trip.userID === currentUser.id);
+
+    return {
+      user: currentUser,
+      trips: usersTrips,
+    }
+  }
+
+  listUserTripsById(id) {
+    return this.trips.filter(trip => trip.userID = id)
+  }
+
+  showTotalSpentById(destinations, id) {
+    let totalSpent = 0
+    let trips = this.listUserTripsById(id)
+    trips.forEach(trip => {
+      let myDestination = this.findDestinationByTrip(destinations)
+      totalSpent += this.showTotalSpentHelper(myDestination, trip)
+    });
+    return totalSpent
+  }
 }
 
 export default Agent;
