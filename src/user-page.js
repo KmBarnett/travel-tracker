@@ -5,7 +5,7 @@ const userElements = {
       <img src="./images/001-ticket.svg" alt="">
       My Trips
     </button>
-    <button type="button" name="Plan a Trip">
+    <button id="plan-trip" type="button" name="Plan a Trip">
       <img src="./images/005-flyer.svg" alt="">
       Plan a Trip
     </button>
@@ -82,14 +82,14 @@ const userElements = {
   },
 
   tripsDate: (trip) => {
-    return `<h2 class="ticket-date">Days: ${trip.date}</h2>`
+    return `<h2 class="ticket-date">Depart On: ${trip.date}</h2>`
   },
 
   tripsTravelers: (trip) => {
     return `<h2 class="ticket-travelers">Travelers: ${trip.travelers}</h2>`
   },
 
-  createTripsCard: (destination, cost, trip, status) => {
+    createTripsCard: (destination, cost, trip, status) => {
     let done = (status) ? '#228B22' : '#FCFCFC';
     let info = `
     <section id='${trip.id}' class="trip-card ${done}">
@@ -130,7 +130,41 @@ const userElements = {
       <p class="dest-flight-cost">Flight: $<span class="money">${destination.estimatedFlightCostPerPerson}</span> per Person</p>
       </div>
     </section>`
-  }
+  },
+
+  tripRequestModle: (minDate) => {
+    return `
+    <section id="request-form-frame" class="request-form-frame">
+      <form class="request-form">
+        <h1>Trip Request</h1>
+        <label for='list-input'>
+          Destination:
+          <input placeholder="Destination" id='list-input' list="destination-select">
+          <datalist id="destination-select">
+          </datalist>
+        </label>
+        <label for='travelers-form'>
+          Number of Travelers:
+          <input min=0 id="travelers-form" type="number" name="travelers" placeholder="Number of Travelers">
+        </label>
+        <label for='date-travel'>
+          Date of Travel:
+          <input min="${minDate}" value='yyyy-MM-dd' id="date-travel" type="date" name="date" placeholder="Date">
+        </label>
+        <label for='date-return'>
+          Date of Retrun:
+          <input disabled value='yyyy-MM-dd' id="date-return" type="date" name="date" placeholder="Date">
+        </label>
+        <h3 id='request-total' class='request-total'>Total: $0.00</h3>
+        <button type='button' disabled id="request-submit">Request Trip</button>
+      </form>
+    </section>
+    `
+  },
+
+  destinationOption: (destination) => {
+    return `<option value="${destination.destination}">`
+  },
 
 
 }

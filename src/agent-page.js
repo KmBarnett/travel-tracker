@@ -45,6 +45,8 @@ const agentElements = {
 			<td>
       <select>
         <option value="approved">Approved</option>
+        <option value="denied">Denied</option>
+        <option value="canceled">Canceled</option>
         <option ${selected} value="pending">Pending</option>
       <select>
       </td>

@@ -6,6 +6,7 @@
 @import '_destination-area.scss';
 @import '_trip-card.scss';
 @import '_agent-table.scss';
+@import '_request-form.scss';
 
 
 
@@ -79,6 +80,15 @@ main {
   @include flexNdirection(column);
   align-items: center;
   background-color: $grey;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: initial;
+  opacity: .5;
 }
 
 footer {

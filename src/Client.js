@@ -25,6 +25,9 @@ class Client {
     return totalSpent
   }
 
+    updateTrips(trip) {
+      this.trips.push(trip)
+    }
 
   logOut() {
     location.reload();
