@@ -10,19 +10,29 @@ const dataController = {
     fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips')
       .then(response => response.json())
       .then(data => dataController.trips = data.trips)
-      .then(dataController.formatDate)
+      .then(dataController.formatTripsDate)
       .catch(err => console.log(err.message))
   },
 
-  formatDate() {
+  formatTripsDate() {
     dataController.trips.forEach(trip => {
-      let date = trip.date.split('-')
-      if (date.length > 1) {
-        trip.date = `${date[0]}/${date[1]}/${date[2]}`
-      }
-    });
+      trip.date = dataController.formatDate(trip.date)
+    })
+  },
 
+  formatDate(date) {
+    let currentDate = date.split('-')
+    if (currentDate.length > 1) {
+      return `${currentDate[0]}/${currentDate[1]}/${currentDate[2]}`
+    } else {
+      return date
+    }
+  },
 
+  generateId() {
+    let part1 = Math.trunc(Math.random() * 1000000);
+    let part2 = Date.now();
+    return parseInt((part1 * part2).toString().slice(2, 12))
   },
 
   dateToNum(date) {
@@ -77,11 +87,32 @@ const dataController = {
       .catch(err => console.log(err.message))
   },
 
-  findDestination(destinationID) {
+  findDestination(destinationProperty, propertyToMatch) {
     return dataController.destinations
-      .find(destination => destinationID === destination.id)
+      .find(destination => destinationProperty === destination[propertyToMatch])
   },
 
+  postTripHelper(data) {
+
+
+    return {
+      method: 'POST',
+      headers: {
+              'Content-Type': 'application/json'
+             },
+      body: JSON.stringify(data)
+    }
+
+  },
+
+
+  postTrip(data) {
+    let options = dataController.postTripHelper(data)
+    console.log(options);
+    return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', options)
+      .then(response => response.json())
+      .catch(err => console.log(err.message))
+  },
 
 
 
