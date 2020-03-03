@@ -155,6 +155,7 @@ const userElements = {
           Date of Retrun:
           <input disabled value='yyyy-MM-dd' id="date-return" type="date" name="date" placeholder="Date">
         </label>
+        <h3 id='request-total' class='request-total'>Total: $0.00</h3>
         <button type='button' disabled id="request-submit">Request Trip</button>
       </form>
     </section>
