@@ -7,7 +7,7 @@ const dataController = {
 
 
   grabTrips() {
-    fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips')
+    return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips')
       .then(response => response.json())
       .then(data => dataController.trips = data.trips)
       .then(dataController.formatTripsDate)
@@ -108,7 +108,6 @@ const dataController = {
 
   postTrip(data) {
     let options = dataController.postTripHelper(data)
-    console.log(options);
     return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', options)
       .then(response => response.json())
       .catch(err => console.log(err.message))
