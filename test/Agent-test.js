@@ -3,7 +3,6 @@ import moment from 'moment'
 import Agent from '../src/Agent.js'
 const spies = require('chai-spies');
 chai.use(spies);
-const should = chai.should()
 
 // import Agent from '../Agent.js'
 // import Client from '../Client.js'
@@ -15,7 +14,7 @@ describe('Agent', function() {
   let destinationsData;
   let tripsData;
   let userData
-  let mockDate = '2020/03/03';
+  let mockDate = `${moment().format("YYYY/MM/DD")}`;
   let today = `${moment().format("YYYY/MM/DD")}`;
 
 
@@ -79,7 +78,7 @@ describe('Agent', function() {
       suggestedActivities: [ ]
     }, ];
 
-    userData = {travelers:[{
+    userData = {travelers:[ {
       id: 1,
       name: "Ham Leadbeater",
       travelerType: "relaxer"
@@ -156,6 +155,26 @@ describe('Agent', function() {
       total: 1056,
     })
   });
+
+  it('should compareDates dates', function() {
+    expect(user.compareDates([ "2019/09/16", today ])).to.equal(false)
+  });
+
+  it('list user trips by id', function() {
+    expect(user.listUserTripsById(1)).to.deep.equal([{date: "2019/09/16",
+      destinationID: 1,
+      duration: 8,
+      id: 1,
+      status: "approved",
+      suggestedActivities: [],
+      travelers: 1,
+      userID: 1}])
+  });
+
+  it('should calculate user trip cost', function() {
+    expect(user.showTotalSpentById(destinationsData, 1)).to.equal(1056)
+  });
+
 
 
 });

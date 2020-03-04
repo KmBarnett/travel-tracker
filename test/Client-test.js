@@ -15,6 +15,7 @@ describe('Client', function() {
   let user;
   let destinationsData;
   let tripsData;
+  global.location = {}
 
 
 
@@ -89,12 +90,32 @@ describe('Client', function() {
     expect(Client).to.be.a('function');
   });
 
-  it('should be able to calculate the cost of a trip', function(){
+  it('should be able to calculate the cost of a trip', function() {
     expect(user.calulateTripCost(destinationsData[0], tripsData[0])).to.equal(1056);
   });
 
-  it('should be able to calculate the total spent ', function(){
+  it('should be able to calculate the total spent ', function() {
     expect(user.showTotalSpent(destinationsData)).to.equal(15246);
+  });
+
+  it('should be able to calculate the total if approved', function() {
+    expect(user.showTotalSpentHelper(destinationsData[0], tripsData[0])).to.equal(1056);
+  });
+
+  it('should be able to return 0 if pending ', function() {
+    expect(user.showTotalSpentHelper(destinationsData[2], tripsData[2])).to.equal(0);
+  });
+
+  it('should be add a new trip', function() {
+    user.updateTrips( tripsData[2])
+    expect(user.trips.length).to.equal(4);
+  });
+
+  it('should be able to log out', function() {
+    chai.spy.on(location, ['reload'], () => {
+      return 'you have been logged out'
+  })
+    expect(user.logOut()).to.equal('you have been logged out');
   });
 
 

@@ -49,6 +49,10 @@ nav {
 
   }
 
+  & button {
+    margin: 5px;
+  }
+
   & .date {
     font-family: $main-font;
     font-size: 1.5rem;
@@ -73,7 +77,7 @@ nav {
   }
 
   & img {
-    width: 70px;
+    width: 80px;
   }
 
 }
@@ -110,4 +114,60 @@ footer {
 p,
 img {
   pointer-events: none;
+}
+
+@media (max-width: 1000px) {
+  nav {
+
+    & header {
+      @include flexNdirection(column);
+      @include widthNheight(350px, 120px);
+
+      & p {
+        display: none;
+      }
+
+      & section {
+        @include flexNdirection(column);
+        align-items: center;
+        padding: 3%
+      }
+    }
+  }
+}
+
+@media (max-width: 750px) {
+  nav {
+    @include flexNdirection(column);
+    height: 26%;
+
+    & header {
+      @include flexNdirection(row);
+      @include widthNheight(90%, 70px);
+      justify-content: center;
+
+      & section {
+        @include flexNdirection(row);
+        justify-content: space-between;
+
+        & h1 {
+          width: 200px;
+          padding: 3%;
+          font-size: 2rem;
+        }
+
+        & img {
+          width: 50px;
+        }
+      }
+    }
+
+    & .user-buttons {
+      width: 100%;
+
+      & button {
+        justify-content: center;
+      }
+    }
+  }
 }

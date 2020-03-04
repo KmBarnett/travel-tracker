@@ -41,6 +41,7 @@ class Client {
 
   logOut() {
     location.reload();
+    return 'you have been logged out'
   }
 
 }

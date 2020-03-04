@@ -34,3 +34,41 @@
     margin-top: 2%;
   }
 }
+
+@media (max-width: 1000px) {
+  .table-container{
+
+  & .agent-table {
+    width: 90%;
+    text-align: center;
+    border-collapse: collapse;
+    }
+
+    & th:nth-of-type(1),
+    & td:nth-of-type(1) {
+
+      display: none;
+
+      }
+
+  }
+}
+
+
+@media (max-width: 750px) {
+  .table-container{
+    & .agent-table {
+      width: 90%;
+      text-align: center;
+      border-collapse: collapse;
+
+      & th:nth-of-type(5),
+      & td:nth-of-type(5) {
+
+        display: none;
+
+        }
+
+    }
+  }
+}
