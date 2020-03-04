@@ -65,6 +65,10 @@ const showNumberWithCommas = (number) => {
 const renderSearchAgent = () => {
   contentSection.empty()
   contentSection.append(agentElements.renderMyCustomersPage)
+  user.users.forEach(user => {
+    $('#users-names-list').append(userElements.selectorOption(user.name))
+  });
+
 }
 
 const renderResultsHelper = (result, parentNode, destinations) => {
