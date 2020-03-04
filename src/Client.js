@@ -13,13 +13,23 @@ class Client {
       return Math.trunc(((lodgingCost + flightsCost) * 1.1))
   }
 
+  findDestinationByTrip(destinations, trip) {
+    return destinations.find(destination => destination.id === trip.destinationID)
+  }
+
+  showTotalSpentHelper(destination, trip) {
+    if (trip.status === 'approved') {
+      return this.calulateTripCost(destination, trip)
+    } else {
+      return 0
+    }
+  }
+
   showTotalSpent(destinations) {
     let totalSpent = 0
     this.trips.forEach(trip => {
-      let myDestination = destinations.find(destination => destination.id === trip.destinationID)
-      if (trip.status === 'approved') {
-        totalSpent += this.calulateTripCost(myDestination, trip)
-      }
+      let myDestination = this.findDestinationByTrip(destinations, trip)
+      totalSpent += this. showTotalSpentHelper(myDestination, trip)
     });
 
     return totalSpent

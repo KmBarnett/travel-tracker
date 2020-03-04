@@ -15,7 +15,7 @@ describe('Agent', function() {
   let destinationsData;
   let tripsData;
   let userData
-  let mockDate = '2020/03/01';
+  let mockDate = '2020/03/03';
   let today = `${moment().format("YYYY/MM/DD")}`;
 
 
@@ -133,6 +133,28 @@ describe('Agent', function() {
       throw new Error('Need to change mock date to todays date to pass');
     }
     expect(user.showTravelCount(today)).to.equal(1)
+  });
+
+  it('Should be able search a user', function() {
+
+    expect(user.searchUser('Ham Leadbeater', destinationsData)).to.deep.equal({
+      user: {
+        id: 1,
+        name: "Ham Leadbeater",
+        travelerType: "relaxer"
+      },
+      trips: [{
+        id: 1,
+        userID: 1,
+        destinationID: 1,
+        travelers: 1,
+        date: "2019/09/16",
+        duration: 8,
+        status: "approved",
+        suggestedActivities: [ ]
+      },],
+      total: 1056,
+    })
   });
 
 

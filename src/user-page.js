@@ -18,6 +18,9 @@ const userElements = {
       Log Out
     </button>`,
   logIn: `<section id="login-modle" class="login-module">
+    <button class="close" type="button" name="close">
+      X
+    </button>
     <form class="login-form">
       <div>
         <label for="username">Username:</label>
@@ -122,12 +125,13 @@ const userElements = {
     return `
     <section id='${destination.id}' class="destinations-card">
       <h3 class="dest-name">${destination.destination}</h3>
-      <button>
+      <button class='dest-image' value='${destination.destination}'>
       <img src="${destination.image}" alt="${destination.destination}">
       </button>
       <div class="trip-info">
       <p class="dest-lodging-cost">Lodging: $<span class="money">${destination.estimatedLodgingCostPerDay}</span> per Day</p>
       <p class="dest-flight-cost">Flight: $<span class="money">${destination.estimatedFlightCostPerPerson}</span> per Person</p>
+      <p class="dest-flight-cost">${destination.alt}</p>
       </div>
     </section>`
   },
@@ -135,6 +139,9 @@ const userElements = {
   tripRequestModle: (minDate) => {
     return `
     <section id="request-form-frame" class="request-form-frame">
+      <button class="close" type="button" name="close">
+        X
+      </button>
       <form class="request-form">
         <h1>Trip Request</h1>
         <label for='list-input'>
