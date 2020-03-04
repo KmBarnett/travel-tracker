@@ -32,7 +32,7 @@ body {
 
 nav {
   @include flexNdirection(row);
-  @include widthNheight(100%, 130px);
+  @include widthNheight(100%, 150px);
   align-items: center;
   justify-content: space-between;
   padding: 1%;
