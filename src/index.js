@@ -16,7 +16,7 @@ import userElements from './user-page.js';
 import agentElements from './agent-page.js';
 import dataController from './Data-Controller.js'
 
-// images
+// images and style
 import './css/base.scss';
 import './images/sam-icon.svg';
 import './images/005-flyer.svg';
@@ -330,7 +330,7 @@ const logInAgent = () => {
 
 const logInClient = (username) => {
   body.addClass('client-js')
-  let id = username.split('traveler');
+  let id = username.toLowerCase().split('traveler');
   userBtns.html(userElements.navButtons);
   dataController.userLogIn(id[1])
     .then(data => user = user.showClient(data, dataController.grabUserTrips(id[1])))
