@@ -126,12 +126,11 @@ const userElements = {
     <section id='${destination.id}' class="destinations-card">
       <h3 class="dest-name">${destination.destination}</h3>
       <button class='dest-image' value='${destination.destination}'>
-      <img src="${destination.image}" alt="${destination.destination}">
+      <img src="${destination.image}" alt="${destination.alt}">
       </button>
       <div class="trip-info">
       <p class="dest-lodging-cost">Lodging: $<span class="money">${destination.estimatedLodgingCostPerDay}</span> per Day</p>
       <p class="dest-flight-cost">Flight: $<span class="money">${destination.estimatedFlightCostPerPerson}</span> per Person</p>
-      <p class="dest-flight-cost">${destination.alt}</p>
       </div>
     </section>`
   },
@@ -169,8 +168,8 @@ const userElements = {
     `
   },
 
-  destinationOption: (destination) => {
-    return `<option value="${destination.destination}">`
+  selectorOption: (value) => {
+    return `<option value="${value}">`
   },
 
 

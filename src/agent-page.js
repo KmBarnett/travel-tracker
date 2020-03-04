@@ -78,7 +78,9 @@ const agentElements = {
   renderMyCustomersPage: `
     <section class='seach-page'>
       <label class='search-label' for='customer-search'>Search Records:
-      <input class='customer-search' id='customer-search' role="search" type="search" name="search" placeholder="Customer Name">
+      <input list='users-names-list' class='customer-search' id='customer-search' role="search" type="text" name="search" placeholder="Customer Name">
+      <datalist id="users-names-list">
+      </datalist>
       </label>
       <section class='results' id="results">
       </section>

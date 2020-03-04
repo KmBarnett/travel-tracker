@@ -2,6 +2,7 @@
   @include flexNdirection(column);
   width: 100%;
   align-items: center;
+  min-height: 60vh;
 
   & .search-label {
     font-size: 2rem;
@@ -22,7 +23,7 @@
   }
 
   & h2 {
-    margin: 2%; 
+    margin: 2%;
   }
 
   & .results {
