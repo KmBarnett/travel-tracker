@@ -31,6 +31,7 @@ const agentElements = {
            <th>Date of Travel</th>
            <th>Status</th>
            <th>Destination</th>
+           <th>Cost</th>
           </tr>
         </tbody>
       <table>
@@ -39,7 +40,7 @@ const agentElements = {
     `
   },
 
-  userListItem: (trip, user, destination) => {
+  userListItem: (trip, user, destination, cost) => {
     let selected = (trip.status === 'pending') ? 'selected' : '';
     return `
     <tr>
@@ -54,16 +55,18 @@ const agentElements = {
       <select>
       </td>
 			<td>${destination.destination}</td>
+			<td>$${cost}</td>
 		</tr>
     `
   },
 
-  userListItems: (trips, users, destinations) => {
+  userListItems: (trips, users, destinations, user, style) => {
     let cells = []
     trips.forEach(trip => {
-      let user = users.find(user => user.id === trip.userID)
+      let curentUser = users.find(curentUser => curentUser.id === trip.userID)
       let destination = destinations.find(destination => trip.destinationID === parseInt(destination.id))
-      cells.push(agentElements.userListItem(trip, user, destination))
+      let cost = user.calulateTripCost(destination, trip)
+      cells.push(agentElements.userListItem(trip, curentUser, destination, style(cost)))
     })
     return cells
   },
@@ -82,7 +85,11 @@ const agentElements = {
     </section>
     `,
 
-  renderError: `<p>User Does Not Exist</p>`
+  renderError: `<p>User Does Not Exist</p>`,
+
+  renderUserSpent: (amount) => {
+    return `<h2>Customer Has Spent: $${amount}</h2>`
+  }
 
 }
 

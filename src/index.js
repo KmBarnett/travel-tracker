@@ -54,7 +54,7 @@ const closeModle = () => {
 
 // style alteration
 
-const numberWithCommas = (number) => {
+const showNumberWithCommas = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -70,7 +70,8 @@ const renderSearchAgent = () => {
 const renderResultsHelper = (result, parentNode, destinations) => {
   result.trips.forEach(trip => {
     let destination = dataController.findDestination(trip.destinationID, 'id')
-    parentNode.append(agentElements.userListItem(trip, result.user, destination))
+    let cost = user.calulateTripCost(destination, trip)
+    parentNode.append(agentElements.userListItem(trip, result.user, destination, cost))
   });
 }
 
@@ -80,6 +81,7 @@ const searchCustomers = (usersName, destinations) => {
   resultsSection.empty()
   if (userExists) {
   let result = user.searchUser(usersName, destinations)
+    resultsSection.append(agentElements.renderUserSpent(showNumberWithCommas(result.total)))
     resultsSection.append(agentElements.tripsTable())
     renderResultsHelper(result, $('.agent-table'), destinations)
   } else {
@@ -225,7 +227,7 @@ const showUserDataForAgent = (trips) => {
   let table = agentElements.tripsTable();
   contentSection.prepend(table)
   let tableSection = $('#table')
-  let cells = agentElements.userListItems(trips, user.users, dataController.destinations)
+  let cells = agentElements.userListItems(trips, user.users, dataController.destinations, user, showNumberWithCommas)
   cells.forEach(cell => {
     tableSection.append(cell)
   });
@@ -242,7 +244,7 @@ const showUserTrips = () => {
     let date = dataController.compareDates(trip.date);
     let destination = dataController.findDestination(parseInt(trip.destinationID), 'id');
     let cost = user.calulateTripCost(destination, trip);
-    let costWithCommas = numberWithCommas(cost)
+    let costWithCommas = showNumberWithCommas(cost)
     let ticket = userElements.createTripsCard(destination, costWithCommas, trip, date);
 
     contentSection.prepend(ticket)
@@ -273,11 +275,11 @@ const customizePage = () => {
   welcomeBanner.text(`Welcome, ${user.name}`)
   if (body.hasClass('client-js')) {
     let cost = user.showTotalSpent(dataController.destinations)
-    let costWithCommas = numberWithCommas(cost)
+    let costWithCommas = showNumberWithCommas(cost)
     welcomeBanner.append(userElements.totalCost(costWithCommas))
   } else if (body.hasClass('agent-js')) {
     let earned = user.showTotalSpent(dataController.destinations)
-    let earnedWithCommas = numberWithCommas(earned)
+    let earnedWithCommas = showNumberWithCommas(earned)
     pageBanner.append(agentElements.onTrips(user.showTravelCount(today)))
     welcomeBanner.append(agentElements.totalEarned(earnedWithCommas))
   }
