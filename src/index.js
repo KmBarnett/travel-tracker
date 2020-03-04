@@ -171,10 +171,11 @@ const showRequestModle = (destination) => {
     body.append(userElements.tripRequestModle(minDate));
     tripModleDataSelect = $('#destination-select')
     dataController.destinations.forEach(destination => {
-      tripModleDataSelect.append(userElements.destinationOption(destination))
+      tripModleDataSelect.append(userElements.selectorOption(destination))
     });
     assignRequestElements()
     if (destination) {
+      console.log();
       requestDestination.val(destination)
     }
     body.addClass('request')
