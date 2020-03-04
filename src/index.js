@@ -75,7 +75,7 @@ const renderResultsHelper = (result, parentNode, destinations) => {
   result.trips.forEach(trip => {
     let destination = dataController.findDestination(trip.destinationID, 'id')
     let cost = user.calulateTripCost(destination, trip)
-    parentNode.append(agentElements.userListItem(trip, result.user, destination, cost))
+    parentNode.append(agentElements.userListItem(trip, result.user, destination, showNumberWithCommas(cost)))
   });
 }
 
