@@ -170,7 +170,7 @@ const assignRequestElements = () => {
 }
 
 const showRequestModle = (destination) => {
-  if (!body.hasClass('request') && body.hasClass('client')) {
+  if (!body.hasClass('request') && body.hasClass('client-js')) {
     let minDate = moment().add(1, 'days').format('YYYY-MM-DD')
     body.append(userElements.tripRequestModle(minDate));
     tripModleDataSelect = $('#destination-select')
